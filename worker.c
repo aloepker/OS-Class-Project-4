@@ -1,5 +1,5 @@
 //Written by Adam Spencer Loepker
-//Finished on October 14th, 2023
+//Finished on ???
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,7 +10,6 @@
 #include <sys/types.h>
 #include <string.h>
 #include <errno.h>
-
 #define SHMKEY 859048
 #define BUFF_SZ sizeof ( int )
 #define PERMS 0777
@@ -19,12 +18,7 @@ typedef struct msgbuffer {
 	char strData[100];
 	int intData;
 } msgbuffer;
-
-//signal handler:
-void signal_handler(int signum){
-printf("60 Second time limit Reached! Terminating Worker Program\n");
-exit(0);
-}
+// !!! add random number generator code: copy from oss.c  !!!
 
 //worker's goals:
 //do a loop:
@@ -32,15 +26,11 @@ exit(0);
 	//pick option of "process" to run after message, the options are for how much of the time quantum should be used.
 	//reply to the message sent by parent with the option chosen, aka, how long it actulally ran for.
 	// if not terminated, it waits for the next message to be sent by oss
-//end loop
 
 // time that the process actually uses if not all is randomly generated, so add pid seeded generator function
 //process percentages are something like 90-95% for full time, 3-4% for io and 1-2% for termination
 
 int main(int argc, char** argv){
-	//60 second countdown to termination:
-	signal(SIGALRM, signal_handler);
-	alarm(60);
 	msgbuffer buf;
 	buf.mtype = 1;
 	int msqid = 0;
@@ -57,60 +47,30 @@ int main(int argc, char** argv){
 	}
 	printf("Child has access to the message que!\n");
 
-	if(argc>2){
-	//attach to shared memory:
-		int shmidc = shmget(SHMKEY, BUFF_SZ, 0777);
-		if (shmidc == -1){
-			perror("Child process shared memory error!");
-			return EXIT_FAILURE;
-		}
-		int * cint= (int*)(shmat(shmidc,0,0));
 		int argSec = atoi(argv[1]);
 		int argNano = atoi(argv[2]);
-		int timeoutSec = argSec + cint[0];
-		int timeoutNano = argNano + cint[1];
 		int timeUp = 0;
-		int startSec = cint[0];
-		int secActive = 0;
-		printf("WORKER PID: %d PPID %d SysClockS: %d SysclockNano %d TermTimeS: %d TermTimeNano: %d --Just Starting\n",getpid(),getppid(),cint[0], cint[1], timeoutSec, timeoutNano);
+
 		//loop that checks the clock:
 		while(timeUp != 1){
+//loop pt1. check for message from parent w/possible time quantum:
 			// message queue read:
 			if (msgrcv(msqid, &buf, sizeof(msgbuffer), getpid(), 0) == -1) {
 				perror("failed to recieve message form parent");
 				exit(1);
 			}
-			//time check:
-			if ( secActive < (cint[0]-startSec) ){
-				secActive++;
-				// "second" output
-				printf("WORKER PID: %d PPID %d SysClockS: %d SysclockNano %d TermTimeS: %d TermTimeNano: %d -- %d seconds have passed since starting\n",getpid(),getppid(),cint[0], cint[1], timeoutSec, timeoutNano, secActive);
-			}
+//loop pt2. after message is recieved, use logic to decide between the 3 options: full time run, partial io, and partial w/termination.
 
-			//termination condition:
-			if((timeoutSec == cint[0] && timeoutNano < cint[0]) || (timeoutSec < cint[0])) {
-				timeUp = 1;
-				//termination message back to parent:
+//loop pt3. respond to parrent with info related to the first
+				//message back to parent:
 				buf.mtype = getppid();
 				buf.intData = 0;
-				strcpy(buf.strData,"Termination  message back to Parent from Child\n");
+				strcpy(buf.strData,"Some message back to Parent from Child\n");
 				if (msgsnd(msqid, &buf, sizeof(msgbuffer)-sizeof(long),0) == -1) {
 					perror("msgsnd to parent failed\n");
 					exit(1);
 				}
 				printf("WORKER PID: %d PPID %d SysClockS: %d SysclockNano %d TermTimeS: %d TermTimeNano: %d --Terminating\n",getpid(),getppid(),cint[0], cint[1], timeoutSec, timeoutNano);
-			}else{
-				//send nontermination message to parent here:
-				buf.mtype = getppid();
-				buf.intData = 1;
-				strcpy(buf.strData,"Nontermination message back to Parent from Child\n");
-				if (msgsnd(msqid, &buf, sizeof(msgbuffer)-sizeof(long),0) == -1) {
-					perror("msgsnd to parent failed\n");
-					exit(1);
-				}
-			}
+// end loop. if not terminated, loop back to wait for the next message from oss
 		}
-	} else {
-		printf("incorrect number of arguments\n");
-	}
 }
