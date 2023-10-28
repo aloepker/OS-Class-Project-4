@@ -11,10 +11,3 @@ Example: ./oss -n 3 -s 2 -t 5 -f "output.txt"
 
 Git was used for verson control. -see git_history.txt
 
-Everything in this program runs to spec.
-
-I was able to overcome an issue I was having with a little bit of ingenuity:
-I was having trouble with the shared memory/ message queue cleaning shell script,
-so I coppied oss.c and gutted all of the code except where I attached to and delete
-shared memory and message queues, and running that code seems to clean any shared memory errors
-created by the program durring testing! -see fixIPCS.c 

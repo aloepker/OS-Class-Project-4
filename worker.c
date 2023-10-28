@@ -26,6 +26,17 @@ printf("60 Second time limit Reached! Terminating Worker Program\n");
 exit(0);
 }
 
+//worker's goals:
+//do a loop:
+	//check for message - blocking wait is fine - the message will contain the time the worker can posibly run for
+	//pick option of "process" to run after message, the options are for how much of the time quantum should be used.
+	//reply to the message sent by parent with the option chosen, aka, how long it actulally ran for.
+	// if not terminated, it waits for the next message to be sent by oss
+//end loop
+
+// time that the process actually uses if not all is randomly generated, so add pid seeded generator function
+//process percentages are something like 90-95% for full time, 3-4% for io and 1-2% for termination
+
 int main(int argc, char** argv){
 	//60 second countdown to termination:
 	signal(SIGALRM, signal_handler);

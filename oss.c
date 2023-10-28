@@ -34,8 +34,13 @@ int randNano(){
 struct PCB {
 	int occupied;
 	pid_t pid;
-	int startSeconds;
-	int startNano;
+	int startSeconds; //birth time seconds
+	int startNano; //birth time nano
+	int serviceTimeSec; //total seconds process has been running
+	int serviceTimeNano; //total nanoseconds process ha been running
+	int eventWaitSec; //seconds before unblock
+	int eventWaitNano; //nano before unblock
+	int blocked; //is the process blocked?
 };
 struct PCB processTable[20];
 //Display process control block:
@@ -71,6 +76,23 @@ typedef struct msgbuffer {
 	char strData[100];
 	int intData;
 } msgbuffer;
+
+// oss goals:
+//initianlze components
+	//while(termination flags are not set) loop:
+	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
+	//checked blocked processes to see if unblocked time has passed and act accordingly
+	//check time ratio of unblocked processes to schedule, if any: if so, send then blocking wait for message. handle other message return processes too.
+	//increment time (tentitive location in the loop)
+	//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
+//end loop
+//print system report
+
+//order of progress:
+//1. start with messaging 1 worker back and forth. get worker to run its loop corrctly.
+//2. update to total number of workers desired, add in check to see if a process should be launched.
+//3. screen and file outputs, system report included.
+// ask about signal handling for remaining processes and 3 seconds for oss to stop launching processes
 
 int main(int argc, char** argv){
 	int option;
