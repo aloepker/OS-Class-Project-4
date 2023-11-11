@@ -12,6 +12,7 @@
 #include <time.h>
 #include <sys/msg.h>
 #include <errno.h>
+#include <float.h>
 //Simulated clock functions and variables:
 int sysClockNano = 0;
 int sysClockSec = 0;
@@ -75,15 +76,7 @@ typedef struct msgbuffer {
 } msgbuffer;
 
 // oss goals:
-//initianlze components
-	//while(termination flags are not set) loop:
-	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
-	//checked blocked processes to see if unblocked time has passed and act accordingly
-	//check time ratio of unblocked processes to schedule, if any: if so, send then blocking wait for message. handle other message return processes too.
-	//increment time (tentitive location in the loop)
-	//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
-//end loop
-//print system report
+
 
 //order of progress:
 //1. start with messaging 1 worker back and forth. get worker to run its loop corrctly.
@@ -92,6 +85,8 @@ typedef struct msgbuffer {
 // ask about signal handling for remaining processes and 3 seconds for oss to stop launching processes
 
 int main(int argc, char** argv){
+//initianlze components
+
 	int option;
 	int numWorkers = 0;
 	int workerLimit = 0;
@@ -160,20 +155,57 @@ int main(int argc, char** argv){
 	int activeWorkers = 0;
 	int isWorkerActive = 0;
 	int nanoFlag = 0;
-	//while workers still active:
-	while (i<numWorkers){
+	int termFlag1 = 0;
+	int termFlag2 = 0;
+	int lowestTimeS = 0;
+	int lowestTimeN = 0;
+	int planToSchedule = 20;
+	int totalSecActive;
+	int totalNanoActive;
+	double secRatio;
+	double nanoRatio;
+	double lowSecRatio = 1;
+	double lowNanoRatio = 1;
+
+	//while(termination flags are not set) loop:
+	while ((termFlag1 != 0) && (termFlag2 != 0)){
+	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
+	//also, checked blocked processes to see if unblocked time has passed and act accordingly
+		activeWorkers = 0;
+		planToSchedule = 20;
+		lowSecRatio = 1;
+		lowNanoRatio = 1;
+		for(i=0;i<20;i++){
+			//if occupied and blocked, check time for unblock, if time then unblock
+			if(processTable[i].occupied == 1){
+				if(processTable[i].blocked == 1){
+					//check to see if time fo unblocking has passed:
+					if((sysClockSec > processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
+						processTable[i].bocked = 0;
+					}
+				}
+				if(processTable[i].blocked == 0){
+					activeWorkers++;
+					//check time ratio to see if it beats the lowest, if so, it becomes the next scheduled
+					totalSecActive = sysClockSec - processTable[i].startSeconds;
+					totalNanoActive = sysClockNano - processTable[i].startNano;
+					secRatio = processTable[i].serviceTimeSeconds / totalSecActive;
+					nanoRatio = processTable[i].serviceTimeNano / totalNanoActive;
+					if((secRatio < lowSecRatio) && (nanoRatio < lowNanoRatio)){
+						planToSchedule = i;
+					}
+				}
+			}
+		}
+		if ((activeWorkers == 0)){
+			//increment by -t time to allow a worker to fork.
+		}
+
+//increment time (tentitive location in the loop)
 		//increment the clock
 		incrementClock();
-		//update clock into shared memory
-		shmTime[0] = sysClockSec;
-		shmTime[1] = sysClockNano;
-		if(shmTime[1] > 500000000 && nanoFlag == 0){
-			nanoFlag = 1;
-		printPCB(shmTime[0], shmTime[1], outputFile);
-		}else if(shmTime[0] > prevSec){
-			nanoFlag = 0;
-			printPCB(shmTime[0], shmTime[1], outputFile);
-		}
+
+//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
 		//if can create worker, create worker and update PCB:
 		if (createdWorkers < numWorkers){
 			if (activeWorkers < workerLimit ){
@@ -246,7 +278,10 @@ int main(int argc, char** argv){
 			isWorkerActive = 1;
 		}
 		j++;
+//end loop
 	}
+//print system report
+
 		//close output file:
 		fclose(outputFile);
 		//clear message ques:
