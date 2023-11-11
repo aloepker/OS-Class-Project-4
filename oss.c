@@ -66,10 +66,7 @@ void help(){
 	printf("-f <\"output_file_name.txt\">   this sets the name of the output file\n");
 	printf("example:\n./oss -n 3 -s 2 -t 3 -f \"output.txt\"\n");
 }
-//Shared memory and message queue constants:
-#define SHMKEY 859048
-#define BUFF_SZ sizeof (int)
-
+//Message queue constants:
 #define PERMS 0777
 typedef struct msgbuffer {
 	long mtype;
@@ -137,16 +134,6 @@ int main(int argc, char** argv){
 		printf("Error opening output file!\nTerminating program\n");
 		return EXIT_FAILURE;
 	}
-	//initializing shared memory
-	int shmid = shmget ( SHMKEY, BUFF_SZ, 0777 | IPC_CREAT );
-	if ( shmid == -1 ){
-		perror("Shared Memory Creation Error!!!\n");
-		return EXIT_FAILURE;
-	}
-	char * paddr = ( char * )( shmat ( shmid, 0, 0 ) );
-	int * shmTime = ( int * )( paddr );
-	shmTime[0]=0;
-	shmTime[1]=0;
 	//message que initial implementation:
 	msgbuffer buf1;
 	int msqid;
@@ -260,9 +247,7 @@ int main(int argc, char** argv){
 		}
 		j++;
 	}
-		//close shared memory and output file:
-		shmdt(shmTime);
-		shmctl(shmid, IPC_RMID, NULL);
+		//close output file:
 		fclose(outputFile);
 		//clear message ques:
 		if (msgctl(msqid, IPC_RMID, NULL) == -1){
