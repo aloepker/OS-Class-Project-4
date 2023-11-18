@@ -236,7 +236,7 @@ int main(int argc, char** argv){
 				n++;
 			}
 		}
-		//message workers in sequence:
+		//message workers in sequence: !!! workers are now messaged by least ammount of runtime
 		//find next occupied pcb entry:
 		while(isWorkerActive != 1){
 			if(processTable[j].occupied == 1){
@@ -278,15 +278,15 @@ int main(int argc, char** argv){
 			isWorkerActive = 1;
 		}
 		j++;
-//end loop
+	//end loop
 	}
 //print system report
 
-		//close output file:
-		fclose(outputFile);
-		//clear message ques:
-		if (msgctl(msqid, IPC_RMID, NULL) == -1){
-			perror("msgctl failed to get rid of que in parent ");
-			exit(1);
-		}
+	//close output file:
+	fclose(outputFile);
+	//clear message ques:
+	if (msgctl(msqid, IPC_RMID, NULL) == -1){
+		perror("msgctl failed to get rid of que in parent ");
+		exit(1);
+	}
 }
