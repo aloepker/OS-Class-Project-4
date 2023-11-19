@@ -14,14 +14,22 @@
 #include <errno.h>
 #include <float.h>
 //Simulated clock functions and variables:
+#define schTime = 50000;
 int sysClockNano = 0;
 int sysClockSec = 0;
 void incrementClock(){
-	sysClockNano = sysClockNano + 100000000;
+	sysClockNano = sysClockNano + 10000;
 	if (sysClockNano > 1000000000){
 		sysClockSec++;
 		sysClockNano = sysClockNano - 1000000000;
 	}
+}
+void incrementByX(int x){
+	sysClockNano = sysClockNano + x;
+	if (sysClockNano > 1000000000){
+		sysClockSec++;
+		sysClockNano = sysClockNano - 1000000000;
+
 }
 int randSeconds(int max){
 	srand(time(NULL)+1);
@@ -71,7 +79,7 @@ void help(){
 #define PERMS 0777
 typedef struct msgbuffer {
 	long mtype;
-	char strData[100];
+//	char strData[100];
 	int intData;
 } msgbuffer;
 
@@ -90,7 +98,7 @@ int main(int argc, char** argv){
 	int option;
 	int numWorkers = 0;
 	int workerLimit = 0;
-	int timeLimit = 0;
+	int time = 0;
 	int prevSec = 0;
 	char *logFile= "log_file.txt";
 	//User argument menu:
@@ -106,7 +114,7 @@ int main(int argc, char** argv){
 				workerLimit = atoi(optarg);
 				break;
 			case 't':
-				timeLimit = atoi(optarg);
+				time = atoi(optarg);
 				break;
 			case 'f':
 				logFile = optarg;
@@ -145,8 +153,8 @@ int main(int argc, char** argv){
 		exit(1);
 	}
 	//print user input verification:
-	printf("OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, timeLimit,logFile);
-	fprintf(outputFile, "OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, timeLimit,logFile);
+	printf("OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, time,logFile);
+	fprintf(outputFile, "OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, time,logFile);
 	int i=0,j=0,n=0;
 	//fork calls:
 	pid_t childPid;
@@ -179,11 +187,12 @@ int main(int argc, char** argv){
 			//if occupied and blocked, check time for unblock, if time then unblock
 			if(processTable[i].occupied == 1){
 				if(processTable[i].blocked == 1){
-					//check to see if time fo unblocking has passed:
+					//check to see if time for unblocking has passed:
 					if((sysClockSec > processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
 						processTable[i].bocked = 0;
 					}
 				}
+//might want to move this part of the loop lower closer to scheduling
 				if(processTable[i].blocked == 0){
 					activeWorkers++;
 					//check time ratio to see if it beats the lowest, if so, it becomes the next scheduled
@@ -199,11 +208,61 @@ int main(int argc, char** argv){
 		}
 		if ((activeWorkers == 0)){
 			//increment by -t time to allow a worker to fork.
+			incrementByX(time);
+		}
+
+//I feel like here is where I want to message a worker
+//so if planToSchedule != 20, schedule planToSchedule via sending a message to said process and waiting for its return message before carrying o
+	//message workers by least ammount of runtime
+		//find next occupied pcb entry:
+//		while(isWorkerActive != 1){
+//			if(processTable[j].occupied == 1){
+//				isWorkerActive = 1;
+//			}else{
+//				j++;
+//				if (j==20){
+//					j=0;
+//				}
+//			}
+//		}
+		if ((planToSchedule != 20)) {
+			//send and recieve a message with the selected pcb entry:
+			buf1.mtype = processTable[planToSchedule].pid;
+			buf1.intData = schTime;
+			printf("OSS: Sending message to worker %d PID %d at time %d:%d\n", j, processTable[planToSchedule].pid, sysClockSec, sysClockNano);
+			fprintf(outputFile, "OSS: Sending message to worker %d PID %d at time %d:%d\n", j, processTable[planToSchedule].pid, sysClockSec, sysClockNano);
+//			strcpy(buf1.strData, "Message to Child form Parent");
+			if ((msgsnd(msqid, &buf1, sizeof(msgbuffer)-sizeof(long), 0)) == -1) {
+				perror("msgsnd to child failed");
+				exit(1);
+			}
+			printf("OSS: Recieving message from worker %d PID %d at time %d:%d\n", j, processTable[planToSchedule].pid, sysClockSec, sysClockNano);
+			fprintf(outputFile, "OSS: Recieving message from worker %d PID %d at time %d:%d\n", j, processTable[planToSchedule].pid, sysClockSec, sysClockNano);
+			if (msgrcv(msqid, &rcvbuf, sizeof(msgbuffer), getpid(), 0) == -1){
+				perror("failed to recieve message in parent\n");
+				exit(1);
+			}
+//action based on workers response message: including pcb uptates!!
+			//if worker terminates, update pcb:
+			if (rcvbuf.intData < 0){
+			printf("OSS: Worker %d PID %d is planing ot terminate.\n", j, processTable[j].pid);
+			fprintf(outputFile, "OSS: Worker %d PID %d is planing ot terminate.\n", j, processTable[j].pid);
+				activeWorkers--;
+				i++;
+				processTable[j].occupied = 0;
+			}
+		//limits pcb searching loop
+//		isWorkerActive = 0;
+//		if (activeWorkers == 0){
+//			isWorkerActive = 1;
+//		}
+//		j++;
 		}
 
 //increment time (tentitive location in the loop)
 		//increment the clock
 		incrementClock();
+
 
 //use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
 		//if can create worker, create worker and update PCB:
@@ -227,7 +286,7 @@ int main(int argc, char** argv){
 				}
 				//parent side of fork if
 				createdWorkers++;
-				activeWorkers++;
+//				activeWorkers++;
 				//update pcb entry after a fork:
 				processTable[n].occupied = 1;
 				processTable[n].pid = childPid;
@@ -236,51 +295,12 @@ int main(int argc, char** argv){
 				n++;
 			}
 		}
-		//message workers in sequence: !!! workers are now messaged by least ammount of runtime
-		//find next occupied pcb entry:
-		while(isWorkerActive != 1){
-			if(processTable[j].occupied == 1){
-				isWorkerActive = 1;
-			}else{
-				j++;
-				if (j==20){
-					j=0;
-				}
-			}
-		}
-			//send and recieve a message with the selected pcb entry:
-			buf1.mtype = processTable[j].pid;
-			buf1.intData = processTable[j].pid;
-			printf("OSS: Sending message to worker %d PID %d at time %d:%d\n", j, processTable[j].pid, sysClockSec, sysClockNano);
-			fprintf(outputFile, "OSS: Sending message to worker %d PID %d at time %d:%d\n", j, processTable[j].pid, sysClockSec, sysClockNano);
-			strcpy(buf1.strData, "Message to Child form Parent");
-			if ((msgsnd(msqid, &buf1, sizeof(msgbuffer)-sizeof(long), 0)) == -1) {
-				perror("msgsnd to child failed");
-				exit(1);
-			}
-			printf("OSS: Recieving message from worker %d PID %d at time %d:%d\n", j, processTable[j].pid, sysClockSec, sysClockNano);
-			fprintf(outputFile, "OSS: Recieving message from worker %d PID %d at time %d:%d\n", j, processTable[j].pid, sysClockSec, sysClockNano);
-			if (msgrcv(msqid, &rcvbuf, sizeof(msgbuffer), getpid(), 0) == -1){
-				perror("failed to recieve message in parent\n");
-				exit(1);
-			}
-			//if worker terminates, update pcb:
-			if (rcvbuf.intData == 0){
-			printf("OSS: Worker %d PID %d is planing ot terminate.\n", j, processTable[j].pid);
-			fprintf(outputFile, "OSS: Worker %d PID %d is planing ot terminate.\n", j, processTable[j].pid);
-				activeWorkers--;
-				i++;
-				processTable[j].occupied = 0;
-			}
-		//limits pcb searching loop
-		isWorkerActive = 0;
-		if (activeWorkers == 0){
-			isWorkerActive = 1;
-		}
-		j++;
 	//end loop
 	}
+
+
 //print system report
+//need to see what all this should include 
 
 	//close output file:
 	fclose(outputFile);

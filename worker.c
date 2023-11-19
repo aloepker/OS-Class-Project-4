@@ -13,7 +13,7 @@
 #define PERMS 0777
 typedef struct msgbuffer {
 	long mtype;
-	char strData[100];
+//	char strData[100];
 	int intData;
 } msgbuffer;
 //random number generator for worker's task:
