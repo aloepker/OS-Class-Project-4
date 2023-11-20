@@ -21,14 +21,14 @@ void incrementClock(){
 	sysClockNano = sysClockNano + 10000;
 	if (sysClockNano > 1000000000){
 		sysClockSec++;
-		sysClockNano = sysClockNano - 1000000000;
+		sysClockNano -= 1000000000;
 	}
 }
 void incrementByX(int x){
 	sysClockNano = sysClockNano + x;
 	if (sysClockNano > 1000000000){
 		sysClockSec++;
-		sysClockNano = sysClockNano - 1000000000;
+		sysClockNano -= 1000000000;
 
 }
 int randSeconds(int max){
@@ -207,31 +207,17 @@ int main(int argc, char** argv){
 			}
 		}
 		if ((activeWorkers == 0)){
-			//increment by -t time to allow a worker to fork.
+			//increment by -t time initially and to allow a worker to fork.
 			incrementByX(time);
 		}
 
-//I feel like here is where I want to message a worker
-//so if planToSchedule != 20, schedule planToSchedule via sending a message to said process and waiting for its return message before carrying o
-	//message workers by least ammount of runtime
-		//find next occupied pcb entry:
-//		while(isWorkerActive != 1){
-//			if(processTable[j].occupied == 1){
-//				isWorkerActive = 1;
-//			}else{
-//				j++;
-//				if (j==20){
-//					j=0;
-//				}
-//			}
-//		}
+		//message workers by least ammount of runtime
 		if ((planToSchedule != 20)) {
 			//send and recieve a message with the selected pcb entry:
 			buf1.mtype = processTable[planToSchedule].pid;
 			buf1.intData = schTime;
 			printf("OSS: Sending message to worker %d PID %d at time %d:%d\n", j, processTable[planToSchedule].pid, sysClockSec, sysClockNano);
 			fprintf(outputFile, "OSS: Sending message to worker %d PID %d at time %d:%d\n", j, processTable[planToSchedule].pid, sysClockSec, sysClockNano);
-//			strcpy(buf1.strData, "Message to Child form Parent");
 			if ((msgsnd(msqid, &buf1, sizeof(msgbuffer)-sizeof(long), 0)) == -1) {
 				perror("msgsnd to child failed");
 				exit(1);
@@ -243,29 +229,54 @@ int main(int argc, char** argv){
 				exit(1);
 			}
 //action based on workers response message: including pcb uptates!!
-			//if worker terminates, update pcb:
-			if (rcvbuf.intData < 0){
-			printf("OSS: Worker %d PID %d is planing ot terminate.\n", j, processTable[j].pid);
-			fprintf(outputFile, "OSS: Worker %d PID %d is planing ot terminate.\n", j, processTable[j].pid);
-				activeWorkers--;
-				i++;
-				processTable[j].occupied = 0;
-			}
-		//limits pcb searching loop
-//		isWorkerActive = 0;
-//		if (activeWorkers == 0){
-//			isWorkerActive = 1;
-//		}
-//		j++;
-		}
 
-//increment time (tentitive location in the loop)
-		//increment the clock
-		incrementClock();
+			if (rcvbuf.intData < 0){
+				printf("OSS: Worker %d PID %d is planing ot terminate.\n", planToSchedule, processTable[planToSchedule].pid);
+				fprintf(outputFile, "OSS: Worker %d PID %d is planing ot terminate.\n", planToSchedule, processTable[planToSchedule].pid);
+				incrementByX((rcvBuf.intData * (-1)));
+				processTable[planToSchedule].serviceTimeNano += (rcvBuf.intData * -1);//redundant, consider a function instead..
+				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
+					processTable[planToSchedule].serviceTimeSec++;
+					processTable[planToSchedule].serviceTimeNano -= 1000000000;
+				}
+				activeWorkers--;
+				processTable[planToSchedule].occupied = 0;
+			}else if(rcvbuf.intData < schTime){
+				printf("OSS: Worker %d PID %d is requesting an IO opperation.\n", planToSchedule, processTable[planToSchedule].pid);
+				incrementByX(rcvBuf.intData);
+				processTable[planToSchedule].serviceTimeNano += rcvBuf.intData;
+				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
+					processTable[planToSchedule].serviceTimeSec++;
+					processTable[planToSchedule].serviceTimeNano -= 1000000000;
+
+				}
+				processTable[planToSchedule].blocked = 1;
+				//determine how long the IO opperation will make the program wait
+				processTable[planToSchedule].eventWaitSec = (sysClockSec + randSec(2));
+				processTable[planToSchedule].eventWaitNano = (sysClockNano + randNano());
+				//if above 1 sec, add 1 to sec
+				if ((processTable[planToSchedule].eventWaitNano > 1000000000)){
+					processTable[planToSchedule].eventWaitSec++;
+					processTable[planToSchedule].eventWaitNano -= 1000000000;
+
+				}
+			}else{
+				//full time used
+				printf("OSS: Worker %d PID %d finished with it's scheduled time.\n", planToSchedule, processTable[planToSchedule].pid);
+				incrementByX(schTime);
+				processTable[planToSchedule].serviceTimeNano += schTime;
+				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
+					processTable[planToSchedule].serviceTimeSec++;
+					processTable[planToSchedule].serviceTimeNano -= 1000000000;
+
+				}
+			}
+		}
 
 
 //use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
 		//if can create worker, create worker and update PCB:
+// -t needs to pass, and worker simultaneous and max limits must not be passed
 		if (createdWorkers < numWorkers){
 			if (activeWorkers < workerLimit ){
 				childPid = fork();
@@ -292,11 +303,15 @@ int main(int argc, char** argv){
 				processTable[n].pid = childPid;
 				processTable[n].startSeconds = sysClockSec;
 				processTable[n].startNano = sysClockNano;
+//verify pcb is updated correctly here
 				n++;
 			}
 		}
 	//end loop
 	}
+
+//increment time (tentitive location in the loop)
+	incrementClock();
 
 
 //print system report
