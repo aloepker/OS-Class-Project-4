@@ -46,8 +46,8 @@ int main(int argc, char** argv){
 	}
 	printf("Child has access to the message que!\n");
 
-		int argSec = atoi(argv[1]);
-		int argNano = atoi(argv[2]);
+		int timeoutSec = atoi(argv[1]);
+		int timeoutNano = atoi(argv[2]);
 		int timeUp = 0;
 
 		//loop that checks the clock time sent:
@@ -63,14 +63,14 @@ int main(int argc, char** argv){
 			if ((rNum < 3)){
 			//terminate if < 3
 				timeUsed = -randTime(buf.intData);
-				printf("WORKER PID: %d PPID %d SysClockS: %d SysclockNano %d TermTimeS: %d TermTimeNano: %d --Terminating\n",getpid(),getppid(),cint[0], cint[1], timeoutSec, timeoutNano);
+				printf("WORKER PID: %d PPID %d TermTimeS: %d TermTimeNano: %d --Terminating\n",getpid(),getppid(), timeoutSec, timeoutNano);
 				timeUp = 1;
 			}else if((rNum < 9)){
 			//io opperation if < 9
 				timeUsed = randTime(buf.intData);
 			}else{
 			//full time quantum used
-				timeUsed = buf.intData
+				timeUsed = buf.intData;
 			}
 				//message back to parent:
 				buf.mtype = getppid();

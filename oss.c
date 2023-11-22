@@ -1,3 +1,4 @@
+
 //Written by Adam Spencer Loepker
 //Finished on October 14th, 2023
 #include <stdio.h>
@@ -14,7 +15,7 @@
 #include <errno.h>
 #include <float.h>
 //Simulated clock functions and variables:
-#define schTime = 50000;
+const int schTime = 50000;
 int sysClockNano = 0;
 int sysClockSec = 0;
 void incrementClock(){
@@ -53,19 +54,19 @@ struct PCB {
 };
 struct PCB processTable[20];
 //Display process control block:
-void printPCB(int smS, int smN, FILE *file){
-	printf("OSS PID: %d SysClockS: %d SysClockNano: %d\n", getpid(), smS, smN);
-	fprintf(file, "OSS PID: %d SysClockS: %d SysClockNano: %d\n", getpid(), smS, smN);
-	printf("Process Table:\n");
-	fprintf(file, "Process Table:\n");
-	printf("Entry Occupied PID    StartS StartN\n");
-	fprintf(file, "Entry Occupied PID    StartS StartN\n");
-	int m;
-	for (m=0;m<20;m++){
-		printf("  %d     %d      %d     %d      %d\n", m, processTable[m].occupied, processTable[m].pid, processTable[m].startSeconds, processTable[m].startNano);
-		fprintf(file, "  %d     %d      %d     %d      %d\n", m, processTable[m].occupied, processTable[m].pid, processTable[m].startSeconds, processTable[m].startNano);
-	}
-}
+//void printPCB(int smS, int smN, FILE *file){
+//	printf("OSS PID: %d SysClockS: %d SysClockNano: %d\n", getpid(), smS, smN);
+//	fprintf(file, "OSS PID: %d SysClockS: %d SysClockNano: %d\n", getpid(), smS, smN);
+//	printf("Process Table:\n");
+//	fprintf(file, "Process Table:\n");
+//	printf("Entry Occupied PID    StartS StartN\n");
+//	fprintf(file, "Entry Occupied PID    StartS StartN\n");
+//	int m;
+//	for (m=0;m<20;m++){
+//		printf("  %d     %d      %d     %d      %d\n", m, processTable[m].occupied, processTable[m].pid, processTable[m].startSeconds, processTable[m].startNano);
+//		fprintf(file, "  %d     %d      %d     %d      %d\n", m, processTable[m].occupied, processTable[m].pid, processTable[m].startSeconds, processTable[m].startNano);
+//	}
+//}
 //help function:
 void help(){
 	printf("The options for the program are:\n");
@@ -99,7 +100,7 @@ int main(int argc, char** argv){
 	int numWorkers = 0;
 	int workerLimit = 0;
 	int time = 0;
-	int prevSec = 0;
+//	int prevSec = 0;
 	char *logFile= "log_file.txt";
 	//User argument menu:
 	while((option = getopt(argc, argv, "hn:s:t:f:")) != -1){
@@ -159,26 +160,29 @@ int main(int argc, char** argv){
 	//fork calls:
 	pid_t childPid;
 	msgbuffer rcvbuf;
-	int createdWorkers = 0;
+//	int createdWorkers = 0;
+	int totalNewWorkers = 0;
 	int activeWorkers = 0;
-	int isWorkerActive = 0;
-	int nanoFlag = 0;
+//	int isWorkerActive = 0;
+//	int nanoFlag = 0;
 	int termFlag1 = 0;
 	int termFlag2 = 0;
-	int lowestTimeS = 0;
-	int lowestTimeN = 0;
+//	int lowestTimeS = 0;
+//	int lowestTimeN = 0;
 	int planToSchedule = 20;
 	int totalSecActive;
 	int totalNanoActive;
+	int randomSecond;
 	double secRatio;
 	double nanoRatio;
 	double lowSecRatio = 1;
 	double lowNanoRatio = 1;
 
 	//while(termination flags are not set) loop:
-	while ((termFlag1 != 0) && (termFlag2 != 0)){
+	while ((termFlag1 != 1) && (termFlag2 != 1)){
 	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
 	//also, checked blocked processes to see if unblocked time has passed and act accordingly
+		termFlag1 = 0;
 		activeWorkers = 0;
 		planToSchedule = 20;
 		lowSecRatio = 1;
@@ -186,29 +190,36 @@ int main(int argc, char** argv){
 		for(i=0;i<20;i++){
 			//if occupied and blocked, check time for unblock, if time then unblock
 			if(processTable[i].occupied == 1){
+				activeWorkers++;
 				if(processTable[i].blocked == 1){
 					//check to see if time for unblocking has passed:
 					if((sysClockSec > processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
-						processTable[i].bocked = 0;
+						processTable[i].blocked = 0;
+						incrementByX(5000);
 					}
 				}
 //might want to move this part of the loop lower closer to scheduling
 				if(processTable[i].blocked == 0){
-					activeWorkers++;
 					//check time ratio to see if it beats the lowest, if so, it becomes the next scheduled
 					totalSecActive = sysClockSec - processTable[i].startSeconds;
 					totalNanoActive = sysClockNano - processTable[i].startNano;
-					secRatio = processTable[i].serviceTimeSeconds / totalSecActive;
+					secRatio = processTable[i].serviceTimeSec / totalSecActive;
 					nanoRatio = processTable[i].serviceTimeNano / totalNanoActive;
 					if((secRatio < lowSecRatio) && (nanoRatio < lowNanoRatio)){
 						planToSchedule = i;
+						lowSecRatio = secRatio;
+						lowNanoRatio = nanoRatio;
 					}
 				}
 			}
 		}
+
 		if ((activeWorkers == 0)){
-			//increment by -t time initially and to allow a worker to fork.
+			//increment by -t time initially and to allow a worker to fork. set flag incase worker max has been hit
+			termFlag1 = 1;
 			incrementByX(time);
+		}else{
+			incrementByX(5000);
 		}
 
 		//message workers by least ammount of runtime
@@ -233,8 +244,9 @@ int main(int argc, char** argv){
 			if (rcvbuf.intData < 0){
 				printf("OSS: Worker %d PID %d is planing ot terminate.\n", planToSchedule, processTable[planToSchedule].pid);
 				fprintf(outputFile, "OSS: Worker %d PID %d is planing ot terminate.\n", planToSchedule, processTable[planToSchedule].pid);
-				incrementByX((rcvBuf.intData * (-1)));
-				processTable[planToSchedule].serviceTimeNano += (rcvBuf.intData * -1);//redundant, consider a function instead..
+//consider output for these statements
+				incrementByX((rcvbuf.intData * (-1)));
+				processTable[planToSchedule].serviceTimeNano += (rcvbuf.intData * -1);//redundant, consider a function instead..
 				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
 					processTable[planToSchedule].serviceTimeSec++;
 					processTable[planToSchedule].serviceTimeNano -= 1000000000;
@@ -243,8 +255,9 @@ int main(int argc, char** argv){
 				processTable[planToSchedule].occupied = 0;
 			}else if(rcvbuf.intData < schTime){
 				printf("OSS: Worker %d PID %d is requesting an IO opperation.\n", planToSchedule, processTable[planToSchedule].pid);
-				incrementByX(rcvBuf.intData);
-				processTable[planToSchedule].serviceTimeNano += rcvBuf.intData;
+//must respond with time used
+				incrementByX(rcvbuf.intData);
+				processTable[planToSchedule].serviceTimeNano += rcvbuf.intData;
 				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
 					processTable[planToSchedule].serviceTimeSec++;
 					processTable[planToSchedule].serviceTimeNano -= 1000000000;
@@ -252,7 +265,8 @@ int main(int argc, char** argv){
 				}
 				processTable[planToSchedule].blocked = 1;
 				//determine how long the IO opperation will make the program wait
-				processTable[planToSchedule].eventWaitSec = (sysClockSec + randSec(2));
+				randomSecond = randNano();
+				processTable[planToSchedule].eventWaitSec = (sysClockSec + randomSecond);
 				processTable[planToSchedule].eventWaitNano = (sysClockNano + randNano());
 				//if above 1 sec, add 1 to sec
 				if ((processTable[planToSchedule].eventWaitNano > 1000000000)){
@@ -277,8 +291,9 @@ int main(int argc, char** argv){
 //use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
 		//if can create worker, create worker and update PCB:
 // -t needs to pass, and worker simultaneous and max limits must not be passed
-		if (createdWorkers < numWorkers){
+		if (totalNewWorkers < numWorkers){
 			if (activeWorkers < workerLimit ){
+//should also stop if more then 3 actual seconds have passed. is this from app start or since last worker has launched? assuming the first one. Not sure how to go about this just yet..
 				childPid = fork();
 				if (childPid == -1){
 					printf("Fork Process Failed!\n");
@@ -286,17 +301,18 @@ int main(int argc, char** argv){
 				}
 				//child side of the fork if
 				if (childPid == 0) {
-					int timeSec = randSeconds(timeLimit);
+					int timeSec = randSeconds(time);
 					int timeNano = randNano();
 					char secArg[10];
 					char nanoArg[10];
 					sprintf(secArg, "%d", timeSec);
 					sprintf(nanoArg, "%d", timeNano);
 					char * args[] = {"./worker", secArg, nanoArg, NULL};
+//worker is getting sent the wrong data..
 					execvp("./worker", args);
 				}
 				//parent side of fork if
-				createdWorkers++;
+				totalNewWorkers++;
 //				activeWorkers++;
 				//update pcb entry after a fork:
 				processTable[n].occupied = 1;
@@ -306,16 +322,20 @@ int main(int argc, char** argv){
 //verify pcb is updated correctly here
 				n++;
 			}
+		}else{
+			termFlag2 = 1;
 		}
-	//end loop
-	}
-
-//increment time (tentitive location in the loop)
+	//increment time (tentitive location in the loop)
 	incrementClock();
 
 
+	//end loop
+	}
+
+
+
 //print system report
-//need to see what all this should include 
+//need to see what all this should include
 
 	//close output file:
 	fclose(outputFile);
@@ -324,4 +344,5 @@ int main(int argc, char** argv){
 		perror("msgctl failed to get rid of que in parent ");
 		exit(1);
 	}
+}
 }
