@@ -55,7 +55,7 @@ int main(int argc, char** argv){
 		//loop pt1. check for message from parent w/possible time quantum:
 			// message queue read:
 			if (msgrcv(msqid, &buf, sizeof(msgbuffer), getpid(), 0) == -1) {
-				perror("failed to recieve message form parent");
+				perror("WTF... failed to recieve message form parent");
 				exit(1);
 			}
 			//after messaage is recieved, use logic to decide between the 3 options: full time run, partial io, and partial w/termination.

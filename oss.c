@@ -1,4 +1,3 @@
-
 //Written by Adam Spencer Loepker
 //Finished on October 14th, 2023
 #include <stdio.h>
@@ -30,14 +29,12 @@ void incrementByX(int x){
 	if (sysClockNano > 1000000000){
 		sysClockSec++;
 		sysClockNano -= 1000000000;
-
+	}
 }
 int randSeconds(int max){
-	srand(time(NULL)+1);
 	return rand()%max;
 }
 int randNano(){
-	srand(time(NULL));
 	return 1+rand()%1000000000;
 }
 //Process Control Block:
@@ -95,7 +92,7 @@ typedef struct msgbuffer {
 
 int main(int argc, char** argv){
 //initianlze components
-
+	srand(time(NULL));
 	int option;
 	int numWorkers = 0;
 	int workerLimit = 0;
@@ -153,6 +150,7 @@ int main(int argc, char** argv){
 		perror("msgget in parent error");
 		exit(1);
 	}
+printf("Message que active in parrent\n");
 	//print user input verification:
 	printf("OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, time,logFile);
 	fprintf(outputFile, "OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, time,logFile);
@@ -344,5 +342,4 @@ int main(int argc, char** argv){
 		perror("msgctl failed to get rid of que in parent ");
 		exit(1);
 	}
-}
 }
