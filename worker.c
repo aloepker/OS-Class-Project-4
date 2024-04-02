@@ -54,6 +54,7 @@ int main(int argc, char** argv){
 		while(timeUp != 1){
 		//loop pt1. check for message from parent w/possible time quantum:
 			// message queue read:
+printf("My code even gets to here in the worker, so either the message queue is not blocking wait or some error in oss \n");
 			if (msgrcv(msqid, &buf, sizeof(msgbuffer), getpid(), 0) == -1) {
 				perror("WTF... failed to recieve message form parent");
 				exit(1);

@@ -175,7 +175,7 @@ printf("Message que active in parrent\n");
 	double nanoRatio;
 	double lowSecRatio = 1;
 	double lowNanoRatio = 1;
-
+printf("Entering Parent Loop:\n");
 	//while(termination flags are not set) loop:
 	while ((termFlag1 != 1) && (termFlag2 != 1)){
 	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
@@ -299,6 +299,7 @@ printf("Message que active in parrent\n");
 				}
 				//child side of the fork if
 				if (childPid == 0) {
+printf("oss fork successful:\n");
 					int timeSec = randSeconds(time);
 					int timeNano = randNano();
 					char secArg[10];
@@ -310,6 +311,7 @@ printf("Message que active in parrent\n");
 					execvp("./worker", args);
 				}
 				//parent side of fork if
+printf("oss continues:(this is likely an error since I am incrementing variables based on the idea a worker was created\n"); //this might be what is messing up the message queue
 				totalNewWorkers++;
 //				activeWorkers++;
 				//update pcb entry after a fork:
