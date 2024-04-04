@@ -167,7 +167,7 @@ printf("Message que active in parrent\n");
 	int termFlag2 = 0;
 //	int lowestTimeS = 0;
 //	int lowestTimeN = 0;
-	int planToSchedule = 20;
+	int planToSchedule = 20;  // why the fuck is this 20 and not zero?!?
 	int totalSecActive;
 	int totalNanoActive;
 	int randomSecond;
@@ -211,7 +211,7 @@ printf("Entering Parent Loop:\n");
 				}
 			}
 		}
-
+printf("checking active worker number\n");
 		if ((activeWorkers == 0)){
 			//increment by -t time initially and to allow a worker to fork. set flag incase worker max has been hit
 			termFlag1 = 1;
@@ -220,8 +220,10 @@ printf("Entering Parent Loop:\n");
 			incrementByX(5000);
 		}
 
+printf("message send pre-if: planm to schedule = %d\n", planToSchedule);
 		//message workers by least ammount of runtime
 		if ((planToSchedule != 20)) {
+printf("plan to schedule is not 20!, preparing further to send message:\n");
 			//send and recieve a message with the selected pcb entry:
 			buf1.mtype = processTable[planToSchedule].pid;
 			buf1.intData = schTime;
@@ -313,6 +315,7 @@ printf("oss fork successful:\n");
 				//parent side of fork if
 printf("oss continues:(this is likely an error since I am incrementing variables based on the idea a worker was created\n"); //this might be what is messing up the message queue
 				totalNewWorkers++;
+printf("%d\n", totalNewWorkers);
 //				activeWorkers++;
 				//update pcb entry after a fork:
 				processTable[n].occupied = 1;
