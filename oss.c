@@ -177,18 +177,25 @@ printf("Message que active in parrent\n");
 	double lowNanoRatio = 1;
 printf("Entering Parent Loop:\n");
 	//while(termination flags are not set) loop:
-	while ((termFlag1 != 1) && (termFlag2 != 1)){
+
+//	while ((termFlag1 != 1) && (termFlag2 != 1)){
+	while (!(termFlag1 && termFlag2)){
 	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
 	//also, checked blocked processes to see if unblocked time has passed and act accordingly
-		termFlag1 = 0;
+	
+	termFlag1 = 0;
 		activeWorkers = 0;
 		planToSchedule = 20;
 		lowSecRatio = 1;
 		lowNanoRatio = 1;
 		for(i=0;i<20;i++){
+printf("loop at %d\n", i);
 			//if occupied and blocked, check time for unblock, if time then unblock
 			if(processTable[i].occupied == 1){
 				activeWorkers++;
+printf("\nprocess table %d found!\n\n", i);
+
+
 				if(processTable[i].blocked == 1){
 					//check to see if time for unblocking has passed:
 					if((sysClockSec > processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
@@ -204,14 +211,14 @@ printf("Entering Parent Loop:\n");
 					secRatio = processTable[i].serviceTimeSec / totalSecActive;
 					nanoRatio = processTable[i].serviceTimeNano / totalNanoActive;
 					if((secRatio < lowSecRatio) && (nanoRatio < lowNanoRatio)){
-						planToSchedule = i;
+						planToSchedule = i;// was previously highligted
 						lowSecRatio = secRatio;
 						lowNanoRatio = nanoRatio;
 					}
 				}
 			}
 		}
-printf("checking active worker number\n");
+printf("active worker number %d\n", activeWorkers);
 		if ((activeWorkers == 0)){
 			//increment by -t time initially and to allow a worker to fork. set flag incase worker max has been hit
 			termFlag1 = 1;
@@ -220,7 +227,7 @@ printf("checking active worker number\n");
 			incrementByX(5000);
 		}
 
-printf("message send pre-if: planm to schedule = %d\n", planToSchedule);
+printf("message send pre-if: plan to schedule = %d\n", planToSchedule);
 		//message workers by least ammount of runtime
 		if ((planToSchedule != 20)) {
 printf("plan to schedule is not 20!, preparing further to send message:\n");
@@ -309,15 +316,15 @@ printf("oss fork successful:\n");
 					sprintf(secArg, "%d", timeSec);
 					sprintf(nanoArg, "%d", timeNano);
 					char * args[] = {"./worker", secArg, nanoArg, NULL};
-//worker is getting sent the wrong data..
 					execvp("./worker", args);
 				}
 				//parent side of fork if
-printf("oss continues:(this is likely an error since I am incrementing variables based on the idea a worker was created\n"); //this might be what is messing up the message queue
+
 				totalNewWorkers++;
 printf("%d\n", totalNewWorkers);
 //				activeWorkers++;
 				//update pcb entry after a fork:
+printf("filling out process table entry %d\n", n);
 				processTable[n].occupied = 1;
 				processTable[n].pid = childPid;
 				processTable[n].startSeconds = sysClockSec;
@@ -326,6 +333,8 @@ printf("%d\n", totalNewWorkers);
 				n++;
 			}
 		}else{
+	
+printf("Term Flag 2 is set!\n");
 			termFlag2 = 1;
 		}
 	//increment time (tentitive location in the loop)
@@ -333,8 +342,9 @@ printf("%d\n", totalNewWorkers);
 
 
 	//end loop
-	}
+	}//how does this loop end abruptly??
 
+printf("OSS Main loop has ended. \n termFlag1=%d \n termFlag2=%d\n", termFlag1, termFlag2);
 
 
 //print system report
@@ -343,6 +353,7 @@ printf("%d\n", totalNewWorkers);
 	//close output file:
 	fclose(outputFile);
 	//clear message ques:
+printf("Message queue is starting to clear via OSS\n");
 	if (msgctl(msqid, IPC_RMID, NULL) == -1){
 		perror("msgctl failed to get rid of que in parent ");
 		exit(1);

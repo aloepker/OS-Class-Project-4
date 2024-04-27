@@ -56,6 +56,7 @@ int main(int argc, char** argv){
 			// message queue read:
 printf("My code even gets to here in the worker, must be some error in oss leading to a -1 flag being sent \n");
 			if (msgrcv(msqid, &buf, sizeof(msgbuffer), getpid(), 0) == -1) {
+printf("worker:parent process id is : %d\n",getppid());
 				perror("WTF... failed to recieve message form parent");
 				exit(1);
 			}

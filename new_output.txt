@@ -1,4 +1,0 @@
-OSS: Number of workers Selected: 2
-Number of Workers at a time: 2
-Number of loops for each Worker: 1000000
-Output file: new_output.txt
