@@ -158,16 +158,11 @@ printf("Message que active in parrent\n");
 	//fork calls:
 	pid_t childPid;
 	msgbuffer rcvbuf;
-//	int createdWorkers = 0;
 	int totalNewWorkers = 0;
 	int activeWorkers = 0;
-//	int isWorkerActive = 0;
-//	int nanoFlag = 0;
 	int termFlag1 = 0;
 	int termFlag2 = 0;
-//	int lowestTimeS = 0;
-//	int lowestTimeN = 0;
-	int planToSchedule = 20;  // why the fuck is this 20 and not zero?!?
+	int planToSchedule = 20;
 	int totalSecActive;
 	int totalNanoActive;
 	int randomSecond;
@@ -177,12 +172,10 @@ printf("Message que active in parrent\n");
 	double lowNanoRatio = 1;
 printf("Entering Parent Loop:\n");
 	//while(termination flags are not set) loop:
-
-//	while ((termFlag1 != 1) && (termFlag2 != 1)){
-	while (!(termFlag1 && termFlag2)){
+	while (!(termFlag1==1 && termFlag2==1)){
 	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
 	//also, checked blocked processes to see if unblocked time has passed and act accordingly
-	
+//incrementByX(100);
 	termFlag1 = 0;
 		activeWorkers = 0;
 		planToSchedule = 20;
@@ -208,8 +201,17 @@ printf("\nprocess table %d found!\n\n", i);
 					//check time ratio to see if it beats the lowest, if so, it becomes the next scheduled
 					totalSecActive = sysClockSec - processTable[i].startSeconds;
 					totalNanoActive = sysClockNano - processTable[i].startNano;
-					secRatio = processTable[i].serviceTimeSec / totalSecActive;
-					nanoRatio = processTable[i].serviceTimeNano / totalNanoActive;
+	
+					if (totalSecActive == 0){
+						secRatio = 0;
+					}else{
+						secRatio = processTable[i].serviceTimeSec / totalSecActive;
+					}
+					if (totalNanoActive ==0){
+						nanoRatio = 0;
+					}else{
+						nanoRatio = processTable[i].serviceTimeNano / totalNanoActive;
+					}
 					if((secRatio < lowSecRatio) && (nanoRatio < lowNanoRatio)){
 						planToSchedule = i;// was previously highligted
 						lowSecRatio = secRatio;
@@ -327,13 +329,14 @@ printf("%d\n", totalNewWorkers);
 printf("filling out process table entry %d\n", n);
 				processTable[n].occupied = 1;
 				processTable[n].pid = childPid;
+		
 				processTable[n].startSeconds = sysClockSec;
 				processTable[n].startNano = sysClockNano;
 //verify pcb is updated correctly here
 				n++;
 			}
 		}else{
-	
+
 printf("Term Flag 2 is set!\n");
 			termFlag2 = 1;
 		}
@@ -348,6 +351,7 @@ printf("OSS Main loop has ended. \n termFlag1=%d \n termFlag2=%d\n", termFlag1, 
 
 
 //print system report
+
 //need to see what all this should include
 
 	//close output file:
