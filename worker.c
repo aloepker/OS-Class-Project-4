@@ -54,14 +54,14 @@ int main(int argc, char** argv){
 		while(timeUp != 1){
 		//loop pt1. check for message from parent w/possible time quantum:
 			// message queue read:
-printf("My code even gets to here in the worker, must be some error in oss leading to a -1 flag being sent \n");
+
 			if (msgrcv(msqid, &buf, sizeof(msgbuffer), getpid(), 0) == -1) {
 printf("worker:parent process id is : %d\n",getppid());
 				perror("WTF... failed to recieve message form parent");
 				exit(1);
 			}
 			//after messaage is recieved, use logic to decide between the 3 options: full time run, partial io, and partial w/termination.
-			rNum = 10; //randOption();   currently a test value while building
+			rNum = 1; //randOption();   //currently a test value while building
 			if ((rNum < 3)){
 			//terminate if < 3
 				timeUsed = -randTime(buf.intData);

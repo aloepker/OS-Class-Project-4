@@ -182,7 +182,7 @@ printf("Entering Parent Loop:\n");
 		lowSecRatio = 1;
 		lowNanoRatio = 1;
 		for(i=0;i<20;i++){
-printf("loop at %d\n", i);
+//printf("loop at %d\n", i);
 			//if occupied and blocked, check time for unblock, if time then unblock
 			if(processTable[i].occupied == 1){
 				activeWorkers++;
@@ -194,7 +194,7 @@ printf("\nprocess table %d found!\n\n", i);
 					if((sysClockSec > processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
 						processTable[i].blocked = 0;
 						incrementByX(5000);
-					}
+ 					}
 				}
 //might want to move this part of the loop lower closer to scheduling
 				if(processTable[i].blocked == 0){
@@ -207,7 +207,7 @@ printf("\nprocess table %d found!\n\n", i);
 					}else{
 						secRatio = processTable[i].serviceTimeSec / totalSecActive;
 					}
-					if (totalNanoActive ==0){
+					if (totalNanoActive == 0){
 						nanoRatio = 0;
 					}else{
 						nanoRatio = processTable[i].serviceTimeNano / totalNanoActive;
