@@ -2,9 +2,106 @@ OSS: Number of workers Selected: 2
 Number of Workers at a time: 2
 Number of loops for each Worker: 1000000000
 Output file: new_output.txt
-OSS: Sending message to worker 0 PID 2248199 at time 1:15000
-OSS: Recieving message from worker 0 PID 2248199 at time 1:15000
-OSS: Worker 0 PID 2248199 is planing ot terminate.
-OSS: Sending message to worker 0 PID 2248200 at time 1:58873
-OSS: Recieving message from worker 0 PID 2248200 at time 1:58873
-OSS: Worker 1 PID 2248200 is planing ot terminate.
+OSS PID: 3800700 SysClockS: 1 SysClockNano: 10000
+Process Table:
+Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
+  0     1      3800703     0      1000000000      0        0       0        0       0
+  1     0      0     0      0      0        0       0        0       0
+  2     0      0     0      0      0        0       0        0       0
+  3     0      0     0      0      0        0       0        0       0
+  4     0      0     0      0      0        0       0        0       0
+  5     0      0     0      0      0        0       0        0       0
+  6     0      0     0      0      0        0       0        0       0
+  7     0      0     0      0      0        0       0        0       0
+  8     0      0     0      0      0        0       0        0       0
+  9     0      0     0      0      0        0       0        0       0
+  10     0      0     0      0      0        0       0        0       0
+  11     0      0     0      0      0        0       0        0       0
+  12     0      0     0      0      0        0       0        0       0
+  13     0      0     0      0      0        0       0        0       0
+  14     0      0     0      0      0        0       0        0       0
+  15     0      0     0      0      0        0       0        0       0
+  16     0      0     0      0      0        0       0        0       0
+  17     0      0     0      0      0        0       0        0       0
+  18     0      0     0      0      0        0       0        0       0
+  19     0      0     0      0      0        0       0        0       0
+OSS: Sending message to worker 0 PID 3800703 at time 1:15000
+OSS: Recieving message from worker 0 PID 3800703 at time 1:15000
+OSS: Worker 0 PID 3800703 is planing ot terminate.
+OSS PID: 3800700 SysClockS: 1 SysClockNano: 16419317
+Process Table:
+Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
+  0     0      3800703     0      1000000000      0        16394317       0        0       0
+  1     1      3800704     1      16409317      0        0       0        0       0
+  2     0      0     0      0      0        0       0        0       0
+  3     0      0     0      0      0        0       0        0       0
+  4     0      0     0      0      0        0       0        0       0
+  5     0      0     0      0      0        0       0        0       0
+  6     0      0     0      0      0        0       0        0       0
+  7     0      0     0      0      0        0       0        0       0
+  8     0      0     0      0      0        0       0        0       0
+  9     0      0     0      0      0        0       0        0       0
+  10     0      0     0      0      0        0       0        0       0
+  11     0      0     0      0      0        0       0        0       0
+  12     0      0     0      0      0        0       0        0       0
+  13     0      0     0      0      0        0       0        0       0
+  14     0      0     0      0      0        0       0        0       0
+  15     0      0     0      0      0        0       0        0       0
+  16     0      0     0      0      0        0       0        0       0
+  17     0      0     0      0      0        0       0        0       0
+  18     0      0     0      0      0        0       0        0       0
+  19     0      0     0      0      0        0       0        0       0
+OSS: Sending message to worker 0 PID 3800704 at time 1:16424317
+OSS: Recieving message from worker 0 PID 3800704 at time 1:16424317
+OSS: Worker 1 PID 3800704 is planing ot terminate.
+OSS PID: 3800700 SysClockS: 1 SysClockNano: 24653619
+Process Table:
+Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
+  0     0      3800703     0      1000000000      0        16394317       0        0       0
+  1     0      3800704     1      16409317      0        8219302       0        0       0
+  2     0      0     0      0      0        0       0        0       0
+  3     0      0     0      0      0        0       0        0       0
+  4     0      0     0      0      0        0       0        0       0
+  5     0      0     0      0      0        0       0        0       0
+  6     0      0     0      0      0        0       0        0       0
+  7     0      0     0      0      0        0       0        0       0
+  8     0      0     0      0      0        0       0        0       0
+  9     0      0     0      0      0        0       0        0       0
+  10     0      0     0      0      0        0       0        0       0
+  11     0      0     0      0      0        0       0        0       0
+  12     0      0     0      0      0        0       0        0       0
+  13     0      0     0      0      0        0       0        0       0
+  14     0      0     0      0      0        0       0        0       0
+  15     0      0     0      0      0        0       0        0       0
+  16     0      0     0      0      0        0       0        0       0
+  17     0      0     0      0      0        0       0        0       0
+  18     0      0     0      0      0        0       0        0       0
+  19     0      0     0      0      0        0       0        0       0
+OSS PID: 3800700 SysClockS: 2 SysClockNano: 24663619
+Process Table:
+Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
+  0     0      3800703     0      1000000000      0        16394317       0        0       0
+  1     0      3800704     1      16409317      0        8219302       0        0       0
+  2     0      0     0      0      0        0       0        0       0
+  3     0      0     0      0      0        0       0        0       0
+  4     0      0     0      0      0        0       0        0       0
+  5     0      0     0      0      0        0       0        0       0
+  6     0      0     0      0      0        0       0        0       0
+  7     0      0     0      0      0        0       0        0       0
+  8     0      0     0      0      0        0       0        0       0
+  9     0      0     0      0      0        0       0        0       0
+  10     0      0     0      0      0        0       0        0       0
+  11     0      0     0      0      0        0       0        0       0
+  12     0      0     0      0      0        0       0        0       0
+  13     0      0     0      0      0        0       0        0       0
+  14     0      0     0      0      0        0       0        0       0
+  15     0      0     0      0      0        0       0        0       0
+  16     0      0     0      0      0        0       0        0       0
+  17     0      0     0      0      0        0       0        0       0
+  18     0      0     0      0      0        0       0        0       0
+  19     0      0     0      0      0        0       0        0       0
+-END REPORT-
+Average Wait Time: 
+Average CPU Utilization: 
+Average Time in Blocked Queue: 
+CPU Idle Time: 

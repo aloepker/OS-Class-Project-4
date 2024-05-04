@@ -16,6 +16,9 @@ typedef struct msgbuffer {
 //	char strData[100];
 	int intData;
 } msgbuffer;
+		
+//correct RNGs
+		
 //random number generator for worker's task:
 int randOption(){
 	srand(getpid()+1);
