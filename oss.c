@@ -32,7 +32,7 @@ void incrementByX(int x){
 	}
 }
 		
-//1. correct  RNGs
+//1. correct  RNGs in Woreker! (these seem to work fine)
 		
 int randSeconds(int max){
 	return rand()%max;
@@ -171,7 +171,7 @@ printf("Message que active in parrent\n");
 	int planToSchedule = 20;
 	int totalSecActive;
 	int totalNanoActive;
-	int randomSecond;
+//	int randomSecond;
 	double secRatio;
 	double nanoRatio;
 	double lowSecRatio = 1;
@@ -275,16 +275,12 @@ printf("preparing to send message:\n");
 				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
 					processTable[planToSchedule].serviceTimeSec++;
 					processTable[planToSchedule].serviceTimeNano -= 1000000000;
-						
-//2. verify that this sets the io opperation time to 5 seconds or less
-						
 				}
 				processTable[planToSchedule].blocked = 1;
 				//determine how long the IO opperation will make the program wait
-					
-//why is randNano() ran twice? lol...ugh, this doesnt look like 5 seconds
-				randomSecond = randNano();
-				processTable[planToSchedule].eventWaitSec = (sysClockSec + randomSecond);
+	
+//this should fix IO opperations to be 6 seconds or less!, just gotta make sure
+				processTable[planToSchedule].eventWaitSec = (sysClockSec + randSeconds(5));
 				processTable[planToSchedule].eventWaitNano = (sysClockNano + randNano());
 				//if above 1 sec, add 1 to sec
 				if ((processTable[planToSchedule].eventWaitNano > 1000000000)){
@@ -312,7 +308,7 @@ printf("preparing to send message:\n");
 
 
 											
-//3. -t needs to pass, and worker simultaneous and max limits must not be passed
+//2. -t needs to pass, and worker simultaneous and max limits must not be passed
 //timePassedIn is literally not used anywhere but 3 places whewre it should be, it is ready to go here
 											
 		currentTime = time(NULL);
@@ -355,45 +351,81 @@ printf("%d\n", totalNewWorkers);
 	//increment time (tentitive location in the loop)
 	incrementClock();
 				
-//5. print pcb log every 1/2 second    			
-	if(){//corect logic to test to see if half a second has passed
+//3. print pcb log every 1/2 second    			
+	if(1==1){//corect logic to test to see if half a second has passed
 		printPCB(sysClockSec, sysClockNano, outputFile);
 	}
 				
 	//end loop
 	}
 
-printf("OSS Main loop has ended. \n termFlag1=%d \n termFlag2=%d\n", termFlag1, termFlag2);
+printf("OSS Main loop has ended.");
 
 //6. end with report on average wait time , avg cpu utilization, avg time a process waited in a blocked queue
 //also include cpu idle time (no ready processes)
 //calculate avg wait time, avg spu utilization, avg blocked time, cpu idle time into variables for the output
+	//End Report:
+	//total process time
+	double tptS;
+	double tptN;
+	//avg wait time
+	double awtS;
+	double awtN;
+	//avg cpu util
+	double acuS;
+	double acuN;
+	//avg blocked time
+//	double abqS;
+//	double abqN;
+	//cpu idle time
+	double citS;
+	double citN;
+	for(i=0;i<20;i++){
 
-//avg wait time
-//avg cpu util
-//avg blocked time
-//cpu idle time
+	//go through the pcb table to determine the average values above
+		//add up wait times, divide by total processes launched (total new processes?)
+		awtS += processTable[i].eventWaitSec;
+		awtN += processTable[i].eventWaitNano;
+//4. if nano over 1 sec, subttract and add to seconds
+							
+		//add up total process time, remove that from total time for ratio (and avg idle time too)
+		tptS += processTable[i].serviceTimeSec;
+		tptN += processTable[i].serviceTimeNano;
 
-	
+
+	}
+
 	printf("\n-END REPORT-\n");
 	fprintf(outputFile,"\n-END REPORT-\n");
-	printf("Average Wait Time: \n");
-	fprintf(outputFile,"Average Wait Time: \n");
-	printf("Average CPU Utilization: \n");
-	fprintf(outputFile,"Average CPU Utilization: \n");
-	printf("Average Time in Blocked Queue: \'n");
-	fprintf(outputFile,"Average Time in Blocked Queue: \n");
-	printf("CPU Idle Time: \n");
-	fprintf(outputFile,"CPU Idle Time: \n");
-	
+
+	awtS /= totalNewWorkers;
+	awtN /= totalNewWorkers;
+	printf("Average Wait Time: %f Seconds  %f Nano\n", awtS, awtN);
+	fprintf(outputFile,"Average Wait Time: %f Seconds  %f Nano\n", awtS, awtN);
+
+	acuS = tptS/sysClockSec;
+	acuN = tptN/ sysClockNano;
+	citS = sysClockSec - tptS;
+	citN = sysClockNano - tptN;
+	printf("Average CPU Utilization: %f Seconds  %f Nano\n", acuS, acuN);
+	fprintf(outputFile,"Average CPU Utilization: %f Seconds  %f Nano\n", acuS, acuN);
+
+	printf("Average Time in Blocked Queue is the same as wait time for this program\n");
+	fprintf(outputFile,"Average Time in Blocked Queue is the same as wait time for this program\n");
+
+	printf("CPU Idle Time: %f Seconds  %f Nano\n", citS, citN);
+	fprintf(outputFile,"CPU Idle Time: %f Seconds  %f Nano\n", citS, citN);
+
 
 
 	//close output file:
 	fclose(outputFile);
 	//clear message ques:
-printf("Message queue is starting to clear via OSS\n");
+printf("End of Program: Message queue is starting to clear via OSS\n");
 	if (msgctl(msqid, IPC_RMID, NULL) == -1){
 		perror("msgctl failed to get rid of que in parent ");
 		exit(1);
 	}
 }
+		
+//5. correct output to include file too and go voer code to turn in
