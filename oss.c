@@ -171,6 +171,8 @@ printf("Message que active in parrent\n");
 	int planToSchedule = 20;
 	int totalSecActive;
 	int totalNanoActive;
+	int printCountNano;
+	int printCountSec;
 //	int randomSecond;
 	double secRatio;
 	double nanoRatio;
@@ -350,6 +352,8 @@ printf("%d\n", totalNewWorkers);
 	if(1==1){//corect logic to test to see if half a second has passed
 		printPCB(sysClockSec, sysClockNano, outputFile);
 	}
+//use printCountNano and printCountSec
+
 				
 	//end loop
 	}
