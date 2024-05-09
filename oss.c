@@ -278,8 +278,6 @@ printf("preparing to send message:\n");
 				}
 				processTable[planToSchedule].blocked = 1;
 				//determine how long the IO opperation will make the program wait
-	
-//this should fix IO opperations to be 6 seconds or less!, just gotta make sure
 				processTable[planToSchedule].eventWaitSec = (sysClockSec + randSeconds(5));
 				processTable[planToSchedule].eventWaitNano = (sysClockNano + randNano());
 				//if above 1 sec, add 1 to sec
@@ -301,11 +299,8 @@ printf("preparing to send message:\n");
 			}
 		}
 
-
-//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.(reset a flag at launch maybe.
+//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.
 		//if can create worker, create worker and update PCB:
-
-
 
 											
 //2. -t needs to pass, and worker simultaneous and max limits must not be passed
@@ -366,49 +361,54 @@ printf("OSS Main loop has ended.");
 //calculate avg wait time, avg spu utilization, avg blocked time, cpu idle time into variables for the output
 	//End Report:
 	//total process time
-	double tptS;
-	double tptN;
+	double tptS=0;
+	double tptN=0;
 	//avg wait time
-	double awtS;
-	double awtN;
+	double awtS=0;
+	double awtN=0;
 	//avg cpu util
-	double acuS;
-	double acuN;
-	//avg blocked time
-//	double abqS;
-//	double abqN;
+	double acuS=0;
+	double acuN=0;
 	//cpu idle time
-	double citS;
-	double citN;
+	double citS=0;
+	double citN=0;
 	for(i=0;i<20;i++){
-
 	//go through the pcb table to determine the average values above
 		//add up wait times, divide by total processes launched (total new processes?)
 		awtS += processTable[i].eventWaitSec;
 		awtN += processTable[i].eventWaitNano;
-//4. if nano over 1 sec, subttract and add to seconds
-							
+		if (awtN>999999999){
+			awtN -= 1000000000;
+			awtS++;
+		}
+
 		//add up total process time, remove that from total time for ratio (and avg idle time too)
 		tptS += processTable[i].serviceTimeSec;
 		tptN += processTable[i].serviceTimeNano;
-
-
+		if (tptN>999999999){
+			tptN -= 1000000000;
+			tptS++;
+		}
 	}
 
 	printf("\n-END REPORT-\n");
 	fprintf(outputFile,"\n-END REPORT-\n");
 
-	awtS /= totalNewWorkers;
 	awtN /= totalNewWorkers;
-	printf("Average Wait Time: %f Seconds  %f Nano\n", awtS, awtN);
-	fprintf(outputFile,"Average Wait Time: %f Seconds  %f Nano\n", awtS, awtN);
+	awtS /= totalNewWorkers;
+	printf("Average Wait Time: %f Seconds %f Nano\n", awtS, awtN);
+	fprintf(outputFile,"Average Wait Time: %f Seconds %f Nano\n", awtS, awtN);
 
-	acuS = tptS/sysClockSec;
-	acuN = tptN/ sysClockNano;
+	acuN = tptN/sysClockNano;
+	if (acuS == 0){
+		acuS = 0;
+	}else{
+		acuS = tptS/sysClockSec;
+	}
 	citS = sysClockSec - tptS;
 	citN = sysClockNano - tptN;
-	printf("Average CPU Utilization: %f Seconds  %f Nano\n", acuS, acuN);
-	fprintf(outputFile,"Average CPU Utilization: %f Seconds  %f Nano\n", acuS, acuN);
+	printf("Average CPU Utilization: %f %% of all Seconds  %f %% of all Nano\n", acuS, acuN);
+	fprintf(outputFile,"Average CPU Utilization: %f %% of all Seconds  %f %% of all Nano\n", acuS, acuN);
 
 	printf("Average Time in Blocked Queue is the same as wait time for this program\n");
 	fprintf(outputFile,"Average Time in Blocked Queue is the same as wait time for this program\n");
@@ -427,5 +427,5 @@ printf("End of Program: Message queue is starting to clear via OSS\n");
 		exit(1);
 	}
 }
-		
-//5. correct output to include file too and go voer code to turn in
+	
+//5. correct output to include file too and go over code to turn in

@@ -1,11 +1,11 @@
 OSS: Number of workers Selected: 4
 Number of Workers at a time: 4
 Number of loops for each Worker: 1000000
-Output file: new_output.txt
-OSS PID: 802852 SysClockS: 0 SysClockNano: 1010000
+Output file: new_output.txtmake
+OSS PID: 803250 SysClockS: 0 SysClockNano: 1010000
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     1      802855     0      1000000      0        0       0        0       0
+  0     1      803253     0      1000000      0        0       0        0       0
   1     0      0     0      0      0        0       0        0       0
   2     0      0     0      0      0        0       0        0       0
   3     0      0     0      0      0        0       0        0       0
@@ -25,14 +25,14 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS: Sending message to worker 0 PID 802855 at time 0:1015000
-OSS: Recieving message from worker 0 PID 802855 at time 0:1015000
-OSS: Worker 0 PID 802855 is planing ot terminate.
-OSS PID: 802852 SysClockS: 0 SysClockNano: 30044299
+OSS: Sending message to worker 0 PID 803253 at time 0:1015000
+OSS: Recieving message from worker 0 PID 803253 at time 0:1015000
+OSS: Worker 0 PID 803253 is planing ot terminate.
+OSS PID: 803250 SysClockS: 0 SysClockNano: 40887383
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     0      802855     0      1000000      0        29019299       0        0       0
-  1     1      802856     0      30034299      0        0       0        0       0
+  0     0      803253     0      1000000      0        39862383       0        0       0
+  1     1      803254     0      40877383      0        0       0        0       0
   2     0      0     0      0      0        0       0        0       0
   3     0      0     0      0      0        0       0        0       0
   4     0      0     0      0      0        0       0        0       0
@@ -51,15 +51,15 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS: Sending message to worker 0 PID 802856 at time 0:30049299
-OSS: Recieving message from worker 0 PID 802856 at time 0:30049299
-OSS: Worker 1 PID 802856 is planing ot terminate.
-OSS PID: 802852 SysClockS: 0 SysClockNano: 35352909
+OSS: Sending message to worker 0 PID 803254 at time 0:40892383
+OSS: Recieving message from worker 0 PID 803254 at time 0:40892383
+OSS: Worker 1 PID 803254 is planing ot terminate.
+OSS PID: 803250 SysClockS: 0 SysClockNano: 82986643
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     0      802855     0      1000000      0        29019299       0        0       0
-  1     0      802856     0      30034299      0        5293610       0        0       0
-  2     1      802857     0      35342909      0        0       0        0       0
+  0     0      803253     0      1000000      0        39862383       0        0       0
+  1     0      803254     0      40877383      0        42084260       0        0       0
+  2     1      803255     0      82976643      0        0       0        0       0
   3     0      0     0      0      0        0       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
@@ -77,16 +77,16 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS: Sending message to worker 0 PID 802857 at time 0:35357909
-OSS: Recieving message from worker 0 PID 802857 at time 0:35357909
-OSS: Worker 2 PID 802857 is planing ot terminate.
-OSS PID: 802852 SysClockS: 0 SysClockNano: 78570886
+OSS: Sending message to worker 0 PID 803255 at time 0:82991643
+OSS: Recieving message from worker 0 PID 803255 at time 0:82991643
+OSS: Worker 2 PID 803255 is planing ot terminate.
+OSS PID: 803250 SysClockS: 0 SysClockNano: 116561258
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     0      802855     0      1000000      0        29019299       0        0       0
-  1     0      802856     0      30034299      0        5293610       0        0       0
-  2     0      802857     0      35342909      0        43202977       0        0       0
-  3     1      802858     0      78560886      0        0       0        0       0
+  0     0      803253     0      1000000      0        39862383       0        0       0
+  1     0      803254     0      40877383      0        42084260       0        0       0
+  2     0      803255     0      82976643      0        33559615       0        0       0
+  3     1      803256     0      116551258      0        0       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
   6     0      0     0      0      0        0       0        0       0
@@ -103,16 +103,16 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS: Sending message to worker 0 PID 802858 at time 0:78575886
-OSS: Recieving message from worker 0 PID 802858 at time 0:78575886
-OSS: Worker 3 PID 802858 is planing ot terminate.
-OSS PID: 802852 SysClockS: 0 SysClockNano: 124374047
+OSS: Sending message to worker 0 PID 803256 at time 0:116566258
+OSS: Recieving message from worker 0 PID 803256 at time 0:116566258
+OSS: Worker 3 PID 803256 is planing ot terminate.
+OSS PID: 803250 SysClockS: 0 SysClockNano: 116833365
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     0      802855     0      1000000      0        29019299       0        0       0
-  1     0      802856     0      30034299      0        5293610       0        0       0
-  2     0      802857     0      35342909      0        43202977       0        0       0
-  3     0      802858     0      78560886      0        45788161       0        0       0
+  0     0      803253     0      1000000      0        39862383       0        0       0
+  1     0      803254     0      40877383      0        42084260       0        0       0
+  2     0      803255     0      82976643      0        33559615       0        0       0
+  3     0      803256     0      116551258      0        257107       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
   6     0      0     0      0      0        0       0        0       0
@@ -129,13 +129,13 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS PID: 802852 SysClockS: 0 SysClockNano: 125384047
+OSS PID: 803250 SysClockS: 0 SysClockNano: 117843365
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     0      802855     0      1000000      0        29019299       0        0       0
-  1     0      802856     0      30034299      0        5293610       0        0       0
-  2     0      802857     0      35342909      0        43202977       0        0       0
-  3     0      802858     0      78560886      0        45788161       0        0       0
+  0     0      803253     0      1000000      0        39862383       0        0       0
+  1     0      803254     0      40877383      0        42084260       0        0       0
+  2     0      803255     0      82976643      0        33559615       0        0       0
+  3     0      803256     0      116551258      0        257107       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
   6     0      0     0      0      0        0       0        0       0
@@ -155,6 +155,6 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
 
 -END REPORT-
 Average Wait Time: 0.000000 Seconds 0.000000 Nano
-Average CPU Utilization: 0.000000% of Seconds  0.983411% of Nano
+Average CPU Utilization: 0.000000 % of all Seconds  0.982349 % of all Nano
 Average Time in Blocked Queue is the same as wait time for this program
 CPU Idle Time: 0.000000 Seconds  2080000.000000 Nano
