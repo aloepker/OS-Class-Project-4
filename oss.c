@@ -1,5 +1,5 @@
 //Written by Adam Spencer Loepker
-//Finished on October 14th, 2023
+//Finished on 5/10/2024
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -45,7 +45,6 @@ struct PCB {
 	pid_t pid;
 	int startSeconds; //birth time seconds
 	int startNano; //birth time nano
-
 	int serviceTimeSec; //total seconds process has been running
 	int serviceTimeNano; //total nanoseconds process ha been running
 	int eventWaitSec; //seconds before unblock
@@ -80,18 +79,8 @@ void help(){
 #define PERMS 0777
 typedef struct msgbuffer {
 	long mtype;
-//	char strData[100];
 	int intData;
 } msgbuffer;
-
-// oss goals:
-
-
-//order of progress:
-//1. start with messaging 1 worker back and forth. get worker to run its loop corrctly.
-//2. update to total number of workers desired, add in check to see if a process should be launched.
-//3. screen and file outputs, system report included.
-// ask about signal handling for remaining processes and 3 seconds for oss to stop launching processes
 
 int main(int argc, char** argv){
 //initianlze components
@@ -102,7 +91,6 @@ int main(int argc, char** argv){
 	int numWorkers = 0;
 	int workerLimit = 0;
 	int timePassedIn = 0;
-//	int prevSec = 0;
 	char *logFile= "log_file.txt";
 	//User argument menu:
 	while((option = getopt(argc, argv, "hn:s:t:f:")) != -1){
@@ -155,7 +143,8 @@ int main(int argc, char** argv){
 		perror("msgget in parent error");
 		exit(1);
 	}
-printf("Message que active in parrent\n");
+	printf("Message  Queue Acitve in Parrent\n");
+	fprintf(outputFile,"Message  Queue Acitve in Parrent\n");
 	//print user input verification:
 	printf("OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, timePassedIn,logFile);
 	fprintf(outputFile, "OSS: Number of workers Selected: %d\nNumber of Workers at a time: %d\nNumber of loops for each Worker: %d\nOutput file: %s\n", numWorkers, workerLimit, timePassedIn,logFile);
@@ -175,7 +164,6 @@ printf("Message que active in parrent\n");
 	int tCountNano = 0;
 	int tCountSec = 0;
 	int tFlag = 0;
-//	int randomSecond;
 	double secRatio;
 	double nanoRatio;
 	double lowSecRatio = 1;
@@ -185,25 +173,18 @@ printf("Entering Parent Loop:\n");
 	while (!(termFlag1==1 && termFlag2==1)){
 	//check for active workers in pcb: if none, increment time by -t, else increment by less. set 1 of 2 termination flags
 	//also, checked blocked processes to see if unblocked time has passed and act accordingly
-//incrementByX(100);
 	termFlag1 = 0;
 		activeWorkers = 0;
 		planToSchedule = 20;
 		lowSecRatio = 1;
 		lowNanoRatio = 1;
 		for(i=0;i<20;i++){
-//printf("loop at %d\n", i);
 			//if occupied and blocked, check time for unblock, if time then unblock
 			if(processTable[i].occupied == 1){
 				activeWorkers++;
-//printf("\nprocess table %d found!\n\n", i);
-
 
 				if(processTable[i].blocked == 1){
 					//check to see if time for unblocking has passed:
-									
-//this if never evaluates to true...
-printf("%d, sysClockSec: %d, eventWaitSec: %d, sysClockNano: %d, eventWaitNano: %d\n", i, sysClockSec, processTable[i].eventWaitSec, sysClockNano, processTable[i].eventWaitNano);
 					if((sysClockSec >= processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
 						processTable[i].blocked = 0;
 						incrementByX(5000);
@@ -232,7 +213,7 @@ printf("%d, sysClockSec: %d, eventWaitSec: %d, sysClockNano: %d, eventWaitNano: 
 				}
 			}
 		}
-printf("active worker number %d\n", activeWorkers);
+
 		if ((activeWorkers == 0)){
 			//increment by -t time initially and to allow a worker to fork. set flag incase worker max has been hit
 			termFlag1 = 1;
@@ -241,10 +222,10 @@ printf("active worker number %d\n", activeWorkers);
 			incrementByX(50000);
 		}
 
-printf("message send pre-if: plan to schedule = %d\n", planToSchedule);
 		//message workers by least ammount of runtime
 		if ((planToSchedule != 20)) {
-printf("preparing to send message:\n");
+			printf("Preparing to send message to %d\n", planToSchedule);
+			fprintf(outputFile,"Preparing to send message to %d\n", planToSchedule);
 			//send and recieve a message with the selected pcb entry:
 			buf1.mtype = processTable[planToSchedule].pid;
 			buf1.intData = schTime;
@@ -260,12 +241,11 @@ printf("preparing to send message:\n");
 				perror("failed to recieve message in parent\n");
 				exit(1);
 			}
-//action based on workers response message: including pcb uptates!!
-
+			//action based on workers response message: including pcb uptates!!
 			if (rcvbuf.intData < 0){
 				printf("OSS: Worker %d PID %d is planing ot terminate.\n", planToSchedule, processTable[planToSchedule].pid);
 				fprintf(outputFile, "OSS: Worker %d PID %d is planing ot terminate.\n", planToSchedule, processTable[planToSchedule].pid);
-//consider output for these statements
+
 				incrementByX((rcvbuf.intData * (-1)));
 				processTable[planToSchedule].serviceTimeNano += (rcvbuf.intData * -1);//redundant, consider a function instead..
 				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
@@ -275,7 +255,7 @@ printf("preparing to send message:\n");
 				activeWorkers--;
 				processTable[planToSchedule].occupied = 0;
 			}else if(rcvbuf.intData < schTime){
-	
+
 				printf("OSS: Worker %d PID %d is requesting an IO opperation.\n", planToSchedule, processTable[planToSchedule].pid);
 				//Must respond with time used
 				incrementByX(rcvbuf.intData);
@@ -304,7 +284,7 @@ printf("preparing to send message:\n");
 				}
 			}
 		}
-//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.
+		//use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.
 		//if can create worker, create worker and update PCB:
 
 		// -t time needs to pass, and worker simultaneous and max limits must not be passed
@@ -321,14 +301,10 @@ printf("preparing to send message:\n");
 		}
 
 		currentTime = time(NULL);
-		
-//BOOM! program will not let processes finish if it sets the term flags here, they need to ride out naturally!
+
 		if(currentTime - startingTime >= 3){
-	//		termFlag1=1;
 			termFlag2=1;
 		} else if ((totalNewWorkers < numWorkers) && (tFlag == 1)){  //and -t time passed  timePassedIn
-//nano needs to be greater than  nano+time passed in
-//or sec needs to be greater than previous. this is the same code as I used in the
 			if (activeWorkers < workerLimit){
 				childPid = fork();
 				if (childPid == -1){
@@ -337,7 +313,8 @@ printf("preparing to send message:\n");
 				}
 				//child side of the fork if
 				if (childPid == 0) {
-printf("oss fork successful:\n");
+					printf("oss fork of procerss %d successful\n", getpid());
+					fprintf(outputFile, "oss fork of procerss %d successful\n", getpid());
 					int timeSec = randSeconds(timePassedIn);
 					int timeNano = randNano();
 					char secArg[10];
@@ -349,7 +326,6 @@ printf("oss fork successful:\n");
 				}
 				//parent side of fork if
 				totalNewWorkers++;
-printf("%d\n", totalNewWorkers);
 				//update pcb entry after a fork:
 				processTable[n].occupied = 1;
 				processTable[n].pid = childPid;
@@ -358,11 +334,10 @@ printf("%d\n", totalNewWorkers);
 				n++;
 			}
 		}else{
-//printf("Term Flag 2 is set!\n");
 			termFlag2 = 1;
 		}
-	
-//Print pcb log every 1/2 second - verify
+
+		//Print pcb log every 1/2 second
 		if(floor(sysClockNano/500000000)>printCountNano){
 			printCountNano++;
 			if(printCountNano==2){
@@ -373,7 +348,7 @@ printf("%d\n", totalNewWorkers);
 			printCountSec++;
 			printPCB(sysClockSec, sysClockNano, outputFile);
 		}
-	//increment time (tentitive location in the loop)
+	//increment time
 		incrementClock();
 
 	//end loop
@@ -381,9 +356,8 @@ printf("%d\n", totalNewWorkers);
 
 printf("OSS Main loop has ended.");
 
-//6. end with report on average wait time , avg cpu utilization, avg time a process waited in a blocked queue
+//End with report on average wait time , avg cpu utilization, avg time a process waited in a blocked queue
 //also include cpu idle time (no ready processes)
-//calculate avg wait time, avg spu utilization, avg blocked time, cpu idle time into variables for the output
 	//End Report:
 	//total process time
 	double tptS=0;
@@ -442,15 +416,13 @@ printf("OSS Main loop has ended.");
 	fprintf(outputFile,"CPU Idle Time: %f Seconds  %f Nano\n", citS, citN);
 
 
-
 	//close output file:
 	fclose(outputFile);
 	//clear message ques:
-printf("End of Program: Message queue is starting to clear via OSS\n");
+	printf("End of OSS: Message queue is shutting down\n");
+	fprintf(outputFile, "End of OSS: Message queue is shutting down\n");
 	if (msgctl(msqid, IPC_RMID, NULL) == -1){
 		perror("msgctl failed to get rid of que in parent ");
 		exit(1);
 	}
 }
-	
-//5. correct output to include file too and go over code to turn in

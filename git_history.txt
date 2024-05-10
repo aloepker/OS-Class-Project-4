@@ -1,0 +1,137 @@
+commit 31bb6ce43949cc268bf7d9d88039ea940d7f5da6
+Author: aloepker <aloepker@gmail.com>
+Date:   Thu May 9 23:57:39 2024 -0500
+
+    works with more test values. turning in tomorrow
+
+commit 0f393f6099cd73414a60f33694eb7e814af2f0c2
+Author: aloepker <aloepker@gmail.com>
+Date:   Thu May 9 23:38:12 2024 -0500
+
+    it works! almost done now, just need to clean up the code and turn it in.
+
+commit 4d5b3a5254ad46debe2cd1c24dc57fffee5c85ee
+Author: aloepker <aloepker@gmail.com>
+Date:   Thu May 9 22:15:04 2024 -0500
+
+    I seem to have an issue with processes returning from their IO opperation. After that I just need code cleanup and I am finished.
+
+commit 5dc8cecf31c67606dc3ecf745ee1f53ebc345e20
+Author: aloepker <aloepker@gmail.com>
+Date:   Thu May 9 00:26:36 2024 -0500
+
+    ugh
+
+commit 99696cdc594f43a251a5ee8cef8b8256db37f927
+Author: aloepker <aloepker@gmail.com>
+Date:   Wed May 8 23:41:19 2024 -0500
+
+    3 small bugs to tease out still
+
+commit 2e086f866722431cc3f60ba5d5f264ea9e75c64d
+Author: aloepker <aloepker@gmail.com>
+Date:   Tue May 7 00:23:41 2024 -0500
+
+    why am I not done yet.. >.<
+
+commit b70873d6ca51a9530bae7aa9b4aae6e0df38c4fc
+Author: aloepker <aloepker@gmail.com>
+Date:   Fri May 3 21:17:02 2024 -0500
+
+    5 more adjustments before final code cleanup!
+
+commit 4b0bd97c10353096b6ebcf2090f1638923285cee
+Author: aloepker <aloepker@gmail.com>
+Date:   Mon Apr 29 23:10:41 2024 -0500
+
+    working again after reverting back a couple of commits. Probably another day or two to go
+
+commit e57b22ce1788ac62d09ad511bdf1ccc8736d983f
+Author: aloepker <aloepker@gmail.com>
+Date:   Sat Apr 27 02:18:50 2024 -0500
+
+    Fixed the divide by zero bug, not the program seems endless for some reason.. Be back in a couple of days
+
+commit 98fd614945529f4e64ea9b5bebdb8c417a9349d6
+Author: aloepker <aloepker@gmail.com>
+Date:   Fri Apr 26 21:38:44 2024 -0500
+
+    Figured out what was going wrong with my wile loop causing the program to end befre the child read its message. Not to figure out where I am dividing by zero and stalling out the parrent process
+
+commit 273c986e07be6777ca4926028874b2f863681ae7
+Author: aloepker <aloepker@gmail.com>
+Date:   Thu Apr 4 01:14:43 2024 -0500
+
+    The problem is my PlanToSchedule variable being set to the fail condition initially. Need to rescope my plan with the variable and see what gets fixed with this. This feels like the right path!
+
+commit fa9f4afa05927ce5e43aa170b51d80d07ae96a9e
+Author: aloepker <aloepker@gmail.com>
+Date:   Tue Apr 2 00:48:54 2024 -0500
+
+    I think I about deduced the message queue error Io was getting! Great first day back at it if you ask me.
+
+commit 291be348d1c85e3c23a865b58e34f33efefdf86e
+Author: aloepker <aloepker@gmail.com>
+Date:   Fri Nov 24 14:57:51 2023 -0600
+
+    Fixed missing bracket issue and corrected srand placement. Now my child's mcgrcv is throwinan error and I am not sure why >.<
+
+commit 0eda0dabda2c8db37622a90f1b834de7d953c257
+Author: aloepker <aloepker@gmail.com>
+Date:   Tue Nov 21 21:43:47 2023 -0600
+
+    Finished the base code for both files, started to remove warningmessages durring make to start debugging, then found out I have a misplaced bracket somewhere in 350 lines of oss.c code.. Really frustrated at nano right now, going to see what I can do with ftp and vscode tomorrow to get this found >.<
+
+commit 14332cb2769f9d3ffda803cade0edf3fb2b8bd27
+Author: aloepker <aloepker@gmail.com>
+Date:   Sun Nov 19 21:15:51 2023 -0600
+
+    Updated response from worker's after receiving their return message, tomorrow I will be workig on the logic for forking and then I get to start debugging! Also need to correct output file logic and system report. Steady as she goes!
+
+commit 84d06bdb8201868bf8ed7ca7c0051bdbf1ae14ac
+Author: aloepker <aloepker@gmail.com>
+Date:   Sat Nov 18 21:54:50 2023 -0600
+
+    Chopping away at oss.c logic, started to update the code for message to worker. Next I plan to finish those updates and update the fork section. After that I thing I am good to start testing and debugging! Getting Close!
+
+commit 9639e9ead9bfe06749c35d43be71efd7e00d285f
+Author: aloepker <aloepker@gmail.com>
+Date:   Fri Nov 17 23:45:28 2023 -0600
+
+    didnt get much done today
+
+commit 94a3891fa45307536615250e2443d28151e4b852
+Author: aloepker <aloepker@gmail.com>
+Date:   Sat Nov 11 15:56:36 2023 -0600
+
+    Started to gut oss.c and reframe scafolding. Got process time logic finished for unblocking/scheduling, next up is to work out time incrementing and update logic for forking new processes to a specific number. I feel like I am getting close!
+
+commit bc1ae8efb99fa1722a11ec0231554cc87d01a346
+Author: aloepker <aloepker@gmail.com>
+Date:   Sat Nov 11 00:04:44 2023 -0600
+
+    Started to clear out old code in oss.c, fell short on time to do more. Tomorrows tasks include structuring steps of implementation in developing oss.c for the current progress. Falling behind is not fun :/
+
+commit ba9eb0e612f18cc7b672ba78557453e2a06311b8
+Author: aloepker <aloepker@gmail.com>
+Date:   Wed Nov 8 18:17:10 2023 -0600
+
+    Finished worker.c code, ready to test once oss.c is finished. Getting there!
+
+commit bd55f9497bb67d1fc844baccb32de46408d685cc
+Author: aloepker <aloepker@gmail.com>
+Date:   Sat Oct 28 00:07:17 2023 -0500
+
+    Gutted worker from project 3 and layed scaffolding for project 4 in worker.c
+
+commit 5256de584e593dd01c10a96ed52180607f7374d8
+Author: aloepker <aloepker@gmail.com>
+Date:   Fri Oct 27 23:27:13 2023 -0500
+
+    Organized coding gameplan.
+
+commit a7e02bb13c1112bf07e5dcaf0341c522481ef607
+Author: aloepker <aloepker@gmail.com>
+Date:   Wed Oct 25 14:59:41 2023 -0500
+
+    Initial commit. Files coppied from project3, nothing changed yet. Let's get going!

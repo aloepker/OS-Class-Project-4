@@ -1,5 +1,5 @@
 //Written by Adam Spencer Loepker
-//Finished on ???
+//Finished on 5/10/2024
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,7 +14,6 @@
 #define PERMS 0777
 typedef struct msgbuffer {
 	long mtype;
-//	char strData[100];
 	int intData;
 } msgbuffer;
 
@@ -49,7 +48,7 @@ int main(int argc, char** argv){
 		perror("msgget error in child");
 		exit(1);
 	}
-	printf("Child has access to the message que!\n");
+	printf("Worker: Child has access to the message que!\n");
 
 		int timeoutSec = atoi(argv[1]);
 		int timeoutNano = atoi(argv[2]);
@@ -59,20 +58,17 @@ int main(int argc, char** argv){
 		while(timeUp != 1){
 		//loop pt1. check for message from parent w/possible time quantum:
 			// message queue read:
-
 			if (msgrcv(msqid, &buf, sizeof(msgbuffer), getpid(), 0) == -1) {
-printf("worker: %d  parent process id is : %d\n", getpid(), getppid());
-				perror("WTF... failed to recieve message form parent");
+				perror("Failed to recieve message form parent");
 				exit(1);
 			}
 			//after messaage is recieved, use logic to decide between the 3 options: full time run, partial io, and partial w/termination.
 			rNum = randOption();
-			if ((rNum < 10)){
+			if ((rNum < 7)){
 			//terminate if < 7
 				timeUsed = -randTime(buf.intData);
-				printf("WORKER PID: %d PPID %d TermTimeS: %d TermTimeNano: %d --Terminating\n",getpid(),getppid(), timeoutSec, timeoutNano);
 				timeUp = 1;
-			}else if((rNum < 20)){
+			}else if((rNum < 15)){
 			//io opperation if < 15
 				timeUsed = randTime(buf.intData);
 			}else{

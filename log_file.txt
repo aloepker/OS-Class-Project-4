@@ -1,4 +1,0 @@
-OSS: Number of workers Selected: 0
-Number of Workers at a time: 0
-Number of loops for each Worker: 0
-Output file: log_file.txt
