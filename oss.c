@@ -12,6 +12,7 @@
 #include <time.h>
 #include <sys/msg.h>
 #include <errno.h>
+#include <math.h>
 #include <float.h>
 //Simulated clock functions and variables:
 const int schTime = 50000000; //50ns is 50mil ms
@@ -171,8 +172,11 @@ printf("Message que active in parrent\n");
 	int planToSchedule = 20;
 	int totalSecActive;
 	int totalNanoActive;
-	int printCountNano;
-	int printCountSec;
+	int printCountNano = 0;
+	int printCountSec = 0;
+	int tCountNano = 0;
+	int tCountSec = 0;
+	int tFlag = 0;
 //	int randomSecond;
 	double secRatio;
 	double nanoRatio;
@@ -194,7 +198,7 @@ printf("Entering Parent Loop:\n");
 			//if occupied and blocked, check time for unblock, if time then unblock
 			if(processTable[i].occupied == 1){
 				activeWorkers++;
-printf("\nprocess table %d found!\n\n", i);
+//printf("\nprocess table %d found!\n\n", i);
 
 
 				if(processTable[i].blocked == 1){
@@ -233,7 +237,7 @@ printf("active worker number %d\n", activeWorkers);
 			termFlag1 = 1;
 			incrementByX(timePassedIn);
 		}else{
-			incrementByX(5000);
+			incrementByX(50000);
 		}
 
 printf("message send pre-if: plan to schedule = %d\n", planToSchedule);
@@ -296,24 +300,33 @@ printf("preparing to send message:\n");
 				if ((processTable[planToSchedule].serviceTimeNano >= 1000000000)){
 					processTable[planToSchedule].serviceTimeSec++;
 					processTable[planToSchedule].serviceTimeNano -= 1000000000;
-
 				}
 			}
 		}
-
 //use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.
 		//if can create worker, create worker and update PCB:
-
-											
-//2. -t needs to pass, and worker simultaneous and max limits must not be passed
-//timePassedIn is literally not used anywhere but 3 places whewre it should be, it is ready to go here
-											
+	
+// -t time needs to pass, and worker simultaneous and max limits must not be passed
+		tFlag = 0;
+		if(floor(sysClockNano / timePassedIn) > tCountNano){
+			tCountNano++;
+			if(tCountNano == floor(timePassedIn/1000000000)){
+				tCountNano = 0;
+			}
+			tFlag = 1;
+		}else if(sysClockSec > tCountSec){
+			tCountSec++;
+			tFlag = 1;
+		}
+	
 		currentTime = time(NULL);
 		if(currentTime - startingTime >= 3){
 			termFlag1=1;
 			termFlag2=1;
-		} else if (totalNewWorkers < numWorkers){
-			if (activeWorkers < workerLimit ){
+		} else if ((totalNewWorkers < numWorkers) && (tFlag == 1)){  //and -t time passed  timePassedIn
+//nano needs to be greater than  nano+time passed in
+//or sec needs to be greater than previous. this is the same code as I used in the
+			if (activeWorkers < workerLimit){
 				childPid = fork();
 				if (childPid == -1){
 					printf("Fork Process Failed!\n");
@@ -345,16 +358,21 @@ printf("%d\n", totalNewWorkers);
 //printf("Term Flag 2 is set!\n");
 			termFlag2 = 1;
 		}
+	
+//Print pcb log every 1/2 second - verify
+		if(floor(sysClockNano/500000000)>printCountNano){
+			printCountNano++;
+			if(printCountNano==2){
+				printCountNano = 0;
+			}
+			printPCB(sysClockSec, sysClockNano, outputFile);
+		}else if(sysClockSec>printCountSec){
+			printCountSec++;
+			printPCB(sysClockSec, sysClockNano, outputFile);
+		}
 	//increment time (tentitive location in the loop)
-	incrementClock();
-				
-//3. print pcb log every 1/2 second    			
-	if(1==1){//corect logic to test to see if half a second has passed
-		printPCB(sysClockSec, sysClockNano, outputFile);
-	}
-//use printCountNano and printCountSec
+		incrementClock();
 
-				
 	//end loop
 	}
 
