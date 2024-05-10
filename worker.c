@@ -17,9 +17,7 @@ typedef struct msgbuffer {
 //	char strData[100];
 	int intData;
 } msgbuffer;
-		
-//correct RNGs
-		
+
 //random number generator for worker's task:
 int randOption(){
 	struct timespec ts;
@@ -57,14 +55,6 @@ int main(int argc, char** argv){
 		int timeoutNano = atoi(argv[2]);
 		int timeUp = 0;
 
-//test output file:
-char fileName[20];
-snprintf(fileName, sizeof(fileName), "debugWorker%d", getpid());
-FILE * output = fopen(fileName,"w");
-if (output == NULL){
-	printf("Debug File Error!\n");
-	return 1;
-}
 		//loop that checks the clock time sent:
 		while(timeUp != 1){
 		//loop pt1. check for message from parent w/possible time quantum:
@@ -76,10 +66,7 @@ printf("worker: %d  parent process id is : %d\n", getpid(), getppid());
 				exit(1);
 			}
 			//after messaage is recieved, use logic to decide between the 3 options: full time run, partial io, and partial w/termination.
-	
 			rNum = randOption();
-fprintf(output,"%d\n",rNum);
-	
 			if ((rNum < 10)){
 			//terminate if < 7
 				timeUsed = -randTime(buf.intData);
@@ -100,5 +87,4 @@ fprintf(output,"%d\n",rNum);
 					exit(1);
 				}
 		}
-fclose(output);
 }

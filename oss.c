@@ -32,9 +32,7 @@ void incrementByX(int x){
 		sysClockNano -= 1000000000;
 	}
 }
-		
-//1. correct  RNGs in Woreker! (these seem to work fine)
-		
+
 int randSeconds(int max){
 	return rand()%max;
 }
@@ -203,12 +201,15 @@ printf("Entering Parent Loop:\n");
 
 				if(processTable[i].blocked == 1){
 					//check to see if time for unblocking has passed:
-					if((sysClockSec > processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
+									
+//this if never evaluates to true...
+printf("%d, sysClockSec: %d, eventWaitSec: %d, sysClockNano: %d, eventWaitNano: %d\n", i, sysClockSec, processTable[i].eventWaitSec, sysClockNano, processTable[i].eventWaitNano);
+					if((sysClockSec >= processTable[i].eventWaitSec) && (sysClockNano > processTable[i].eventWaitNano)){
 						processTable[i].blocked = 0;
 						incrementByX(5000);
  					}
 				}
-//might want to move this part of the loop lower closer to scheduling
+
 				if(processTable[i].blocked == 0){
 					//check time ratio to see if it beats the lowest, if so, it becomes the next scheduled
 					totalSecActive = sysClockSec - processTable[i].startSeconds;
@@ -274,6 +275,7 @@ printf("preparing to send message:\n");
 				activeWorkers--;
 				processTable[planToSchedule].occupied = 0;
 			}else if(rcvbuf.intData < schTime){
+	
 				printf("OSS: Worker %d PID %d is requesting an IO opperation.\n", planToSchedule, processTable[planToSchedule].pid);
 				//Must respond with time used
 				incrementByX(rcvbuf.intData);
@@ -290,7 +292,6 @@ printf("preparing to send message:\n");
 				if ((processTable[planToSchedule].eventWaitNano > 1000000000)){
 					processTable[planToSchedule].eventWaitSec++;
 					processTable[planToSchedule].eventWaitNano -= 1000000000;
-
 				}
 			}else{
 				//full time used
@@ -305,8 +306,8 @@ printf("preparing to send message:\n");
 		}
 //use logic to see if a new process could/should be forked.if so, set new nano to 1, if total has  launched, set a kill flag.
 		//if can create worker, create worker and update PCB:
-	
-// -t time needs to pass, and worker simultaneous and max limits must not be passed
+
+		// -t time needs to pass, and worker simultaneous and max limits must not be passed
 		tFlag = 0;
 		if(floor(sysClockNano / timePassedIn) > tCountNano){
 			tCountNano++;
@@ -318,7 +319,7 @@ printf("preparing to send message:\n");
 			tCountSec++;
 			tFlag = 1;
 		}
-	
+
 		currentTime = time(NULL);
 		if(currentTime - startingTime >= 3){
 			termFlag1=1;

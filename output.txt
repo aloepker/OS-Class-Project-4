@@ -2,35 +2,38 @@ OSS: Number of workers Selected: 4
 Number of Workers at a time: 4
 Number of loops for each Worker: 1000000
 Output file: output.txt
-OSS: Sending message to worker 0 PID 1094994 at time 0:1060000
-OSS: Recieving message from worker 0 PID 1094994 at time 0:1060000
-OSS: Sending message to worker 0 PID 1094994 at time 0:51120000
-OSS: Recieving message from worker 0 PID 1094994 at time 0:51120000
-OSS: Sending message to worker 0 PID 1094995 at time 0:98398167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:98398167
-OSS: Sending message to worker 0 PID 1094995 at time 0:148458167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:148458167
-OSS: Sending message to worker 0 PID 1094995 at time 0:198518167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:198518167
-OSS: Sending message to worker 0 PID 1094995 at time 0:248578167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:248578167
-OSS: Sending message to worker 0 PID 1094995 at time 0:298638167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:298638167
-OSS: Sending message to worker 0 PID 1094995 at time 0:348698167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:348698167
-OSS: Sending message to worker 0 PID 1094995 at time 0:398758167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:398758167
-OSS: Sending message to worker 0 PID 1094995 at time 0:448818167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:448818167
-OSS: Sending message to worker 0 PID 1094995 at time 0:498878167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:498878167
-OSS PID: 1094991 SysClockS: 0 SysClockNano: 548878167
+OSS: Sending message to worker 0 PID 1128233 at time 0:1060000
+OSS: Recieving message from worker 0 PID 1128233 at time 0:1060000
+OSS: Sending message to worker 0 PID 1128233 at time 0:51120000
+OSS: Recieving message from worker 0 PID 1128233 at time 0:51120000
+OSS: Sending message to worker 0 PID 1128233 at time 0:101180000
+OSS: Recieving message from worker 0 PID 1128233 at time 0:101180000
+OSS: Sending message to worker 0 PID 1128233 at time 0:151240000
+OSS: Recieving message from worker 0 PID 1128233 at time 0:151240000
+OSS: Sending message to worker 0 PID 1128233 at time 0:201300000
+OSS: Recieving message from worker 0 PID 1128233 at time 0:201300000
+OSS: Sending message to worker 0 PID 1128233 at time 0:251360000
+OSS: Recieving message from worker 0 PID 1128233 at time 0:251360000
+OSS: Sending message to worker 0 PID 1128234 at time 0:263122146
+OSS: Recieving message from worker 0 PID 1128234 at time 0:263122146
+OSS: Sending message to worker 0 PID 1128234 at time 0:313182146
+OSS: Recieving message from worker 0 PID 1128234 at time 0:313182146
+OSS: Worker 1 PID 1128234 is planing ot terminate.
+OSS: Sending message to worker 0 PID 1128235 at time 0:346328070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:346328070
+OSS: Sending message to worker 0 PID 1128235 at time 0:396388070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:396388070
+OSS: Sending message to worker 0 PID 1128235 at time 0:446448070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:446448070
+OSS: Sending message to worker 0 PID 1128235 at time 0:496508070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:496508070
+OSS PID: 1128230 SysClockS: 0 SysClockNano: 546508070
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     1      1094994     0      1000000      0        97218167       2        100070073       1
-  1     1      1094995     0      51060000      0        450000000       0        0       0
-  2     1      1094996     0      98338167      0        0       0        0       0
-  3     1      1094997     0      148398167      0        0       0        0       0
+  0     1      1128233     0      1000000      0        261702146       1        878408545       1
+  1     0      1128234     0      51060000      0        83085924       0        0       0
+  2     1      1128235     0      101120000      0        200000000       0        0       0
+  3     1      1128236     0      151180000      0        0       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
   6     0      0     0      0      0        0       0        0       0
@@ -47,33 +50,33 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS: Sending message to worker 0 PID 1094995 at time 0:548938167
-OSS: Recieving message from worker 0 PID 1094995 at time 0:548938167
-OSS: Worker 1 PID 1094995 is planing ot terminate.
-OSS: Sending message to worker 0 PID 1094996 at time 0:552146783
-OSS: Recieving message from worker 0 PID 1094996 at time 0:552146783
-OSS: Sending message to worker 0 PID 1094996 at time 0:602206783
-OSS: Recieving message from worker 0 PID 1094996 at time 0:602206783
-OSS: Worker 2 PID 1094996 is planing ot terminate.
-OSS: Sending message to worker 0 PID 1094997 at time 0:628473033
-OSS: Recieving message from worker 0 PID 1094997 at time 0:628473033
-OSS: Sending message to worker 0 PID 1094997 at time 0:678533033
-OSS: Recieving message from worker 0 PID 1094997 at time 0:678533033
-OSS: Sending message to worker 0 PID 1094997 at time 0:728593033
-OSS: Recieving message from worker 0 PID 1094997 at time 0:728593033
-OSS: Sending message to worker 0 PID 1094997 at time 0:778653033
-OSS: Recieving message from worker 0 PID 1094997 at time 0:778653033
-OSS: Sending message to worker 0 PID 1094997 at time 0:828713033
-OSS: Recieving message from worker 0 PID 1094997 at time 0:828713033
-OSS: Sending message to worker 0 PID 1094997 at time 0:878773033
-OSS: Recieving message from worker 0 PID 1094997 at time 0:878773033
-OSS PID: 1094991 SysClockS: 1 SysClockNano: 39336
+OSS: Sending message to worker 0 PID 1128235 at time 0:546568070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:546568070
+OSS: Sending message to worker 0 PID 1128235 at time 0:596628070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:596628070
+OSS: Sending message to worker 0 PID 1128235 at time 0:646688070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:646688070
+OSS: Sending message to worker 0 PID 1128235 at time 0:696748070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:696748070
+OSS: Sending message to worker 0 PID 1128235 at time 0:746808070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:746808070
+OSS: Sending message to worker 0 PID 1128235 at time 0:796868070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:796868070
+OSS: Sending message to worker 0 PID 1128235 at time 0:846928070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:846928070
+OSS: Sending message to worker 0 PID 1128235 at time 0:896988070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:896988070
+OSS: Sending message to worker 0 PID 1128235 at time 0:947048070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:947048070
+OSS: Sending message to worker 0 PID 1128235 at time 0:997108070
+OSS: Recieving message from worker 0 PID 1128235 at time 0:997108070
+OSS PID: 1128230 SysClockS: 1 SysClockNano: 47108070
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     1      1094994     0      1000000      0        97218167       2        100070073       1
-  1     0      1094995     0      51060000      0        453148616       0        0       0
-  2     0      1094996     0      98338167      0        76206250       0        0       0
-  3     1      1094997     0      148398167      0        298726303       4        789835803       1
+  0     1      1128233     0      1000000      0        261702146       1        878408545       1
+  1     0      1128234     0      51060000      0        83085924       0        0       0
+  2     1      1128235     0      101120000      0        700000000       0        0       0
+  3     1      1128236     0      151180000      0        0       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
   6     0      0     0      0      0        0       0        0       0
@@ -90,13 +93,32 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
-OSS PID: 1094991 SysClockS: 2 SysClockNano: 59336
+OSS: Sending message to worker 0 PID 1128235 at time 1:47168070
+OSS: Recieving message from worker 0 PID 1128235 at time 1:47168070
+OSS: Sending message to worker 0 PID 1128235 at time 1:97228070
+OSS: Recieving message from worker 0 PID 1128235 at time 1:97228070
+OSS: Sending message to worker 0 PID 1128236 at time 1:147288070
+OSS: Recieving message from worker 0 PID 1128236 at time 1:147288070
+OSS: Sending message to worker 0 PID 1128236 at time 1:201248070
+OSS: Recieving message from worker 0 PID 1128236 at time 1:201248070
+OSS: Sending message to worker 0 PID 1128236 at time 1:251308070
+OSS: Recieving message from worker 0 PID 1128236 at time 1:251308070
+OSS: Sending message to worker 0 PID 1128236 at time 1:301368070
+OSS: Recieving message from worker 0 PID 1128236 at time 1:301368070
+OSS: Worker 3 PID 1128236 is planing ot terminate.
+OSS: Sending message to worker 0 PID 1128233 at time 1:878501544
+OSS: Recieving message from worker 0 PID 1128233 at time 1:878501544
+OSS: Sending message to worker 0 PID 1128233 at time 1:928561544
+OSS: Recieving message from worker 0 PID 1128233 at time 1:928561544
+OSS: Sending message to worker 0 PID 1128233 at time 1:978621544
+OSS: Recieving message from worker 0 PID 1128233 at time 1:978621544
+OSS PID: 1128230 SysClockS: 2 SysClockNano: 28621544
 Process Table:
 Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   NanoIOw Blocked
-  0     1      1094994     0      1000000      0        97218167       2        100070073       1
-  1     0      1094995     0      51060000      0        453148616       0        0       0
-  2     0      1094996     0      98338167      0        76206250       0        0       0
-  3     1      1094997     0      148398167      0        298726303       4        789835803       1
+  0     1      1128233     0      1000000      0        411702146       1        878408545       0
+  1     0      1128234     0      51060000      0        83085924       0        0       0
+  2     1      1128235     0      101120000      0        800000000       0        0       0
+  3     0      1128236     0      151180000      0        163248474       0        0       0
   4     0      0     0      0      0        0       0        0       0
   5     0      0     0      0      0        0       0        0       0
   6     0      0     0      0      0        0       0        0       0
@@ -113,9 +135,17 @@ Entry Occupied PID     StartS    StartN    SecActive   NanoActive   SecIOw   Nan
   17     0      0     0      0      0        0       0        0       0
   18     0      0     0      0      0        0       0        0       0
   19     0      0     0      0      0        0       0        0       0
+OSS: Sending message to worker 0 PID 1128235 at time 2:28681544
+OSS: Recieving message from worker 0 PID 1128235 at time 2:28681544
+OSS: Worker 2 PID 1128235 is planing ot terminate.
+OSS: Sending message to worker 0 PID 1128233 at time 2:412780800
+OSS: Recieving message from worker 0 PID 1128233 at time 2:412780800
+OSS: Sending message to worker 0 PID 1128233 at time 2:462840800
+OSS: Recieving message from worker 0 PID 1128233 at time 2:462840800
+OSS: Worker 0 PID 1128233 is planing ot terminate.
 
 -END REPORT-
-Average Wait Time: 1.500000 Seconds 222476469.000000 Nano
-Average CPU Utilization: 0.000000 % of all Seconds  1.171755 % of all Nano
+Average Wait Time: 0.250000 Seconds 219602136.250000 Nano
+Average CPU Utilization: 0.000000 % of all Seconds  1.192015 % of all Nano
 Average Time in Blocked Queue is the same as wait time for this program
-CPU Idle Time: 2.000000 Seconds  -135630000.000000 Nano
+CPU Idle Time: 1.000000 Seconds  -91315000.000000 Nano
