@@ -19,7 +19,7 @@ const int schTime = 50000000; //50ns is 50mil ms
 int sysClockNano = 0;
 int sysClockSec = 0;
 void incrementClock(){
-	sysClockNano = sysClockNano + 10000;
+	sysClockNano = sysClockNano + 1000000;
 	if (sysClockNano > 1000000000){
 		sysClockSec++;
 		sysClockNano -= 1000000000;
@@ -321,8 +321,10 @@ printf("preparing to send message:\n");
 		}
 
 		currentTime = time(NULL);
+		
+//BOOM! program will not let processes finish if it sets the term flags here, they need to ride out naturally!
 		if(currentTime - startingTime >= 3){
-			termFlag1=1;
+	//		termFlag1=1;
 			termFlag2=1;
 		} else if ((totalNewWorkers < numWorkers) && (tFlag == 1)){  //and -t time passed  timePassedIn
 //nano needs to be greater than  nano+time passed in
